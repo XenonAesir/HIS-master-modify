@@ -1,0 +1,17 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hospital?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 131210
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+    hiddenmethod:
+      filter:
+        enable:true
+  #    static-path-pattern: classpath:/resources/,classpath:/static/,classpath:/templates/
+mybatis:
+  mapper-locations: classpath:generator/*.xml
