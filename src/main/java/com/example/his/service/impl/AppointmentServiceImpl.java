@@ -1,7 +1,8 @@
-package com.example.his.service;
+package com.example.his.service.impl;
 
 import com.example.his.generate.*;
 import com.example.his.models.*;
+import com.example.his.service.AppointmentService;
 import com.example.his.tool.DateTool;
 import com.example.his.DTO.RemainDoctorDto;
 import com.example.his.DTO.ReserveHistoryDto;
@@ -13,7 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class AppointmentServiceImpl implements AppointmentService{
+public class AppointmentServiceImpl implements AppointmentService
+{
     @Autowired
     private RemainDeptNumberDao remainDeptNumberDao;
     @Autowired
@@ -41,6 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public int addReserveTable(ReserveTable reserveTable) {
+        System.out.println(reserveTable);
         return reserveTableDao.insert(reserveTable);
     }
 

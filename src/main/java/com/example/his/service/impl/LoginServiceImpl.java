@@ -1,14 +1,16 @@
-package com.example.his.service;
+package com.example.his.service.impl;
 
 import com.example.his.generate.DoctorDao;
 import com.example.his.generate.PatientDao;
 import com.example.his.models.Doctor;
 import com.example.his.models.Patient;
+import com.example.his.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImpl implements LoginService
+{
     @Autowired
     PatientDao patientDao;
     @Autowired

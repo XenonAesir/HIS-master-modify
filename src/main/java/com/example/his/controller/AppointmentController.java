@@ -81,7 +81,7 @@ public class AppointmentController {
         reserveTable.setDepartmentId(departmentId);
         reserveTable.setReserveType(1);
         reserveTable.setReserveState(0);
-        reserveTable.setDoctorId("D0000001");
+        reserveTable.setDoctorId("0000001");
 //        System.out.println(patient.getPatientIdentity());
         //更新剩余名额
         SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH");
