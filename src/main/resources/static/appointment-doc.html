@@ -85,14 +85,14 @@
 							<div class="single-widget">
 								<i class="icofont-ui-call"></i>
 								<p>电话</p>
-								<h4>(023)6519 0120</h4>
+								<h4>0311-85917000</h4>
 							</div>
 							<!--/ End Single Widget -->
 							<!-- Single Widget -->
 							<div class="single-widget">
 								<i class="icofont-location-pin"></i>
 								<p>地址</p>
-								<h4>重庆市沙坪坝区高滩岩正街30号</h4>
+								<h4>石家庄市裕华区东岗路89号</h4>
 							</div>
 							<!--/ End Single Widget -->
 							<!-- Single Widget -->
@@ -119,11 +119,11 @@
 								<nav class="navigation">
 									<ul class="nav menu">
 										<li><a href="index2.html">首页</a></li>
-										<li><a href="#">医院介绍</a></li>
-										<li><a href="#">科室简介</a></li>
-										<li><a href="#">专家教授</a></li>
-										<li><a href="#">联系我们</a></li>
-										<li><a href="/login-staff.html">员工入口</a></li>
+<!--										<li><a href="#">医院介绍</a></li>-->
+<!--										<li><a href="#">科室简介</a></li>-->
+<!--										<li><a href="#">专家教授</a></li>-->
+<!--										<li><a href="#">联系我们</a></li>-->
+<!--										<li><a href="/login-staff.html">员工入口</a></li>-->
 									</ul>
 								</nav>
 							</div>
@@ -234,7 +234,7 @@
 						</thead>
 					</table>
 				</div>
-				<div style="overflow-y: scroll; height: 400px;">
+				<div style="overflow-y: scroll; height: 600px;">
 					<table class="table timetable">
 						<colgroup>
 							<col style="width: 30%;" />
@@ -281,8 +281,8 @@
 
 
 	<!-- Footer Area -->
-	<footer id="footer" class="footer ">
-		<!-- Footer Top -->
+<!--	<footer id="footer" class="footer ">
+		&lt;!&ndash; Footer Top &ndash;&gt;
 		<div class="footer-top">
 			<div class="container">
 				<div class="row">
@@ -291,7 +291,7 @@
 							<h2>About Us</h2>
 							<p>Lorem ipsum dolor sit am consectetur adipisicing elit do eiusmod tempor incididunt ut
 								labore dolore magna.</p>
-							<!-- Social -->
+							&lt;!&ndash; Social &ndash;&gt;
 							<ul class="social">
 								<li><a href="#"><i class="icofont-facebook"></i></a></li>
 								<li><a href="#"><i class="icofont-google-plus"></i></a></li>
@@ -299,7 +299,7 @@
 								<li><a href="#"><i class="icofont-vimeo"></i></a></li>
 								<li><a href="#"><i class="icofont-pinterest"></i></a></li>
 							</ul>
-							<!-- End Social -->
+							&lt;!&ndash; End Social &ndash;&gt;
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-6 col-12">
@@ -363,8 +363,8 @@
 				</div>
 			</div>
 		</div>
-		<!--/ End Footer Top -->
-		<!-- Copyright -->
+		&lt;!&ndash;/ End Footer Top &ndash;&gt;
+		&lt;!&ndash; Copyright &ndash;&gt;
 		<div class="copyright">
 			<div class="container">
 				<div class="row">
@@ -376,8 +376,8 @@
 				</div>
 			</div>
 		</div>
-		<!--/ End Copyright -->
-	</footer>
+		&lt;!&ndash;/ End Copyright &ndash;&gt;
+	</footer>-->
 	<!--/ End Footer Area -->
 
 	<!-- jquery Min JS -->
@@ -436,29 +436,29 @@
 			selectedTime = ''
 			doctorId2Name = {}
 			departmentId2Name = {
-				'0000001': '内科',
-				'0000002': '外科',
-				'0000003': '儿科',
-				'0000004': '五官科',
-				'0000005': '皮肤科',
-				'0000006': '康复科',
+				'DEP0001': '内科',
+				'DEP0002': '外科',
+				'DEP0003': '儿科',
+				'DEP0004': '五官科',
+				'DEP0005': '皮肤科',
+				'DEP0006': '康复科',
 			}
 			departmentName2Id = {
-				'内科': '0000001',
-				'外科': '0000002',
-				'儿科': '0000003',
-				'五官科': '0000004',
-				'皮肤科': '0000005',
-				'康复科': '0000006',
+				'内科': 'DEP0001',
+				'外科': 'DEP0002',
+				'儿科': 'DEP0003',
+				'五官科': 'DEP0004',
+				'皮肤科': 'DEP0005',
+				'康复科': 'DEP0006',
 			}
 
 			department = {
-				'0000001': [],
-				'0000002': [],
-				'0000003': [],
-				'0000004': [],
-				'0000005': [],
-				'0000006': [],
+				'DEP0001': [],
+				'DEP0002': [],
+				'DEP0003': [],
+				'DEP0004': [],
+				'DEP0005': [],
+				'DEP0006': [],
 			};
 
 			$.ajax({
@@ -479,11 +479,11 @@
 			$('#doctor-list').html('') // 清空内容
 			// debugger
 			for (let dept = 1; dept < 7; dept++) {
-				var tmpDoctorList = department['000000' + dept]
+				var tmpDoctorList = department['DEP000' + dept]
 				for (let doc = 0; doc < tmpDoctorList.length; doc++) {
 					var doctorId = tmpDoctorList[doc].id
 					var doctorName = tmpDoctorList[doc].name
-					layoutDoctorGrid(doctorId, '000000' + dept);
+					layoutDoctorGrid(doctorId, 'DEP000' + dept);
 				}
 			}
 		}

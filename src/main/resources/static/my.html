@@ -94,7 +94,7 @@
                             <div class="single-widget">
                                 <i class="icofont-location-pin"></i>
                                 <p>地址</p>
-                                <h4>重庆市沙坪坝区双碑自由村100号</h4>
+                                <h4>石家庄市裕华区东岗路89号</h4>
                             </div>
                             <!--/ End Single Widget -->
                         </div>
@@ -141,8 +141,8 @@
                             <h3 class="title">我的预约记录</h3>
                             <ul class="categor-list">
                                 <li class="active" id="allrecords"><a href="#" onclick="showAllrecords()">全部记录</a></li>
-                                <li id="confirmed"><a href="#" onclick="showConfirmed()">待确认</a></li>
-                                <li id="completed"><a href="#" onclick="showCompleted()">已完成</a></li>
+                                <li id="confirmed"><a href="#" onclick="showConfirmed()">已预约</a></li>
+                                <li id="completed"><a href="#" onclick="showCompleted()">已就诊</a></li>
                                 <li id="cancelled"><a href="#" onclick="showCancelled()">已取消</a></li>
                             </ul>
                         </div>
@@ -178,7 +178,7 @@
                 <div class="func-option doc-confirmed" id="doc-confirmed" style="display: none;" class="col-lg-9 col-12">
                     <div class="main-sidebar">
                         <div class="single-widget category">
-                            <h3 class="title">待确认</h3>
+                            <h3 class="title">已预约</h3>
                             <div>
                                 <table class="table" id="confirmedTable">
                                     <thead>
@@ -198,30 +198,6 @@
                     </div>
                 </div>
                 <!-- End confirmed -->
-
-                <!-- Start completed -->
-                <div class="func-option doc-completed" id="doc-completed" style="display: none;" class="col-lg-9 col-12">
-                    <div class="main-sidebar">
-                        <div class="single-widget category">
-                            <h3 class="title">已完成</h3>
-                            <div>
-                                <table class="table" id="completedTable">
-                                    <thead>
-                                    <tr>
-                                        <th>预约单号</th>
-                                        <th>预约项目</th>
-                                        <th>预约就诊时间</th>
-                                        <th>当前状态</th>
-                                    </tr>
-                                    </thead>
-
-                                </table>
-                            </div>
-                        </div>
-                        <!--/ End Single Widget -->
-                    </div>
-                </div>
-                <!-- End completed -->
 
                 <!-- Start cancelled -->
                 <div class="func-option doc-cancelled" id="doc-cancelled" style="display: none;" class="col-lg-9 col-12">
@@ -252,8 +228,8 @@
     </section>
 
     <!-- Footer Area -->
-    <footer id="footer" class="footer ">
-        <!-- Footer Top -->
+<!--    <footer id="footer" class="footer ">
+        &lt;!&ndash; Footer Top &ndash;&gt;
         <div class="footer-top">
             <div class="container">
                 <div class="row">
@@ -262,7 +238,7 @@
                             <h2>About Us</h2>
                             <p>Lorem ipsum dolor sit am consectetur adipisicing elit do eiusmod tempor incididunt ut
                                 labore dolore magna.</p>
-                            <!-- Social -->
+                            &lt;!&ndash; Social &ndash;&gt;
                             <ul class="social">
                                 <li><a href="#"><i class="icofont-facebook"></i></a></li>
                                 <li><a href="#"><i class="icofont-google-plus"></i></a></li>
@@ -270,7 +246,7 @@
                                 <li><a href="#"><i class="icofont-vimeo"></i></a></li>
                                 <li><a href="#"><i class="icofont-pinterest"></i></a></li>
                             </ul>
-                            <!-- End Social -->
+                            &lt;!&ndash; End Social &ndash;&gt;
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-12">
@@ -334,8 +310,8 @@
                 </div>
             </div>
         </div>
-        <!--/ End Footer Top -->
-        <!-- Copyright -->
+        &lt;!&ndash;/ End Footer Top &ndash;&gt;
+        &lt;!&ndash; Copyright &ndash;&gt;
         <div class="copyright">
             <div class="container">
                 <div class="row">
@@ -347,8 +323,8 @@
                 </div>
             </div>
         </div>
-        <!--/ End Copyright -->
-    </footer>
+        &lt;!&ndash;/ End Copyright &ndash;&gt;
+    </footer>-->
     <!--/ End Footer Area -->
 
     <!-- 遮罩层！ -->
@@ -489,7 +465,7 @@
 
         function confirmCancel(e){
             var reserveId = $(e).parent().parent().data('id')
-            var ans = confirm('取消预约后不可恢复。确认取消？')
+            var ans = confirm('取消预约后不可恢复，且多次取消会被加入黑名单。确认取消？')
             if(!ans) return;
             $.ajax({
                 type: 'post',
@@ -510,12 +486,10 @@
 
             $("#allrecords").addClass('active')
             if ($("#confirmed").hasClass) $("#confirmed").removeClass('active')
-            if ($("#completed").hasClass) $("#completed").removeClass('active')
             if ($("#cancelled").hasClass) $("#cancelled").removeClass('active')
 
             $("#doc-allrecords").css('display','block')
             $("#doc-confirmed").css('display','none')
-            $("#doc-completed").css('display','none')
             $("#doc-cancelled").css('display','none')
 
             var temp = '';
@@ -546,26 +520,16 @@
                                     '<td>' + '<button class="btn button-function"disabled>' + "取消预约" + '</button>' + '</td>' +
                                     '</tr>';
                             }
-                            if (data[$i].reserveState == "0") {//如果此时的状态是待确认
+                            if (data[$i].reserveState == "0") {//如果此时的状态是已预约
                                 temp +=
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
                                     '<td>' + time + '</td>' +
-                                    '<td>' + "待确认" + '</td>' +
+                                    '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >' + "取消预约" + '</button>' + '</td>' +
                                     '</tr>';
 
-                            }
-                            if (data[$i].reserveState == "1") {//如果此时的状态是已完成
-                                temp +=
-                                    '<tr data-id="' + data[$i].reserveId + '">' +
-                                    '<td>' + data[$i].reserveId + '</td>' +
-                                    '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
-                                    '<td>' + time + '</td>' +
-                                    '<td>' + "已完成" + '</td>' +
-                                    '<td>' + '<button class="btn button-function"disabled>' + "取消预约" + '</button>' + '</td>' +
-                                    '</tr>';
                             }
                         }
 
@@ -581,24 +545,14 @@
                                     '<td>' + '<button class="btn button-function"disabled>'+"取消预约"+'</button>' + '</td>' +
                                     '</tr>';
                             }
-                            if(data[$i].reserveState=="0"){//如果此时的状态是待确认
+                            if(data[$i].reserveState=="0"){//如果此时的状态是已预约
                                 temp +=
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName+"-"+"普通号" +'</td>' +
                                     '<td>' + time + '</td>' +
-                                    '<td>' + "待确认" + '</td>' +
+                                    '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >'+"取消预约"+'</button>' + '</td>' +
-                                    '</tr>';
-                            }
-                            if(data[$i].reserveState=="1"){//如果此时的状态是已完成
-                                temp +=
-                                    '<tr data-id="' + data[$i].reserveId + '">' +
-                                    '<td>' + data[$i].reserveId + '</td>' +
-                                    '<td>' + data[$i].departmentName+"-"+"普通号" +'</td>' +
-                                    '<td>' + time + '</td>' +
-                                    '<td>' + "已完成" + '</td>' +
-                                    '<td>' + '<button class="btn button-function"disabled>'+"取消预约"+'</button>' + '</td>' +
                                     '</tr>';
                             }
                         }
@@ -640,14 +594,14 @@
                         var time = d.getHours()
                         if (time == '9') time = '09:00~09:59'
                         else time = time + ':00~' + time + ':59'
-                        if(data[$i].reserveState=="0"){//如果此时的状态是待确认
+                        if(data[$i].reserveState=="0"){//如果此时的状态是已预约
                             if(data[$i].reserveType=="0"){//如果预约的是专家号
                                 temp +=
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName+'</td>' +
                                     '<td>' + time + '</td>' +
-                                    '<td>' + "待确认" + '</td>' +
+                                    '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >'+"取消预约"+'</button>' + '</td>' +
                                     '</tr>';
                             }
@@ -657,7 +611,7 @@
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName+"-"+"普通号" +'</td>' +
                                     '<td>' + time + '</td>' +
-                                    '<td>' + "待确认" + '</td>' +
+                                    '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >'+"取消预约"+'</button>' + '</td>' +
                                     '</tr>';
                             }
@@ -667,66 +621,6 @@
                     console.log(temp);
                     $("#confirmedTable tr:not(:first)").html(""); /*  除了第一行tr的内容，其余内容清空，防止获取重复的数据  */
                     $("#confirmedTable").append(temp);
-                }
-            });
-        }
-
-        function showCompleted() {
-            if ($("#completed").hasClass('active')) return;
-
-            $("#completed").addClass('active')
-            if ($("#allrecords").hasClass('active')) $("#allrecords").removeClass('active')
-            if ($("#confirmed").hasClass('active')) $("#confirmed").removeClass('active')
-            if ($("#cancelled").hasClass('active')) $("#cancelled").removeClass('active')
-
-            $("#doc-allrecords").css('display','none')
-            $("#doc-confirmed").css('display','none')
-            $("#doc-completed").css('display','block')
-            $("#doc-cancelled").css('display','none')
-
-            var temp = '';
-            $.ajax({
-                type:"get",
-                url:"/appoint_history",
-                dataType:"json",
-                success:function(data) {
-                    console.log(data);
-                    for(var $i = 0; $i < data.length; $i++) {
-                        var d = new Date(data[$i].reserveTime);
-                        var year = d.getFullYear()
-                        var month = d.getMonth()+1
-                        var day = d.getDate()
-                        var date = year + '-' + month + '-' + day
-                        var time = d.getHours()
-                        if (time == '9') time = '09:00~09:59'
-                        else time = time + ':00~' + time + ':59'
-                        if(data[$i].reserveState=="1"){//如果此时的状态是已完成
-                            if(data[$i].reserveType=="0"){//如果预约的是专家号
-                                temp +=
-                                    '<tr data-id="' + data[$i].reserveId + '">' +
-                                    '<td>' + data[$i].reserveId + '</td>' +
-                                    '<td>' + "专家号-" + data[$i].doctorName+'</td>' +
-                                    '<td>' + time + '</td>' +
-                                    '<td>' + "已完成" + '</td>' +
-                                    //'<td>' + '<button class="btn button-function"disabled" >'+"取消预约"+'</button>' + '</td>' +
-                                    '</tr>';
-                            }
-                            if(data[$i].reserveType=="1"){//如果预约的是科室号
-                                temp +=
-                                    '<tr data-id="' + data[$i].reserveId + '">' +
-                                    '<td>' + data[$i].reserveId + '</td>' +
-                                    '<td>' + data[$i].departmentName+"-"+"普通号" +'</td>' +
-                                    '<td>' + time + '</td>' +
-                                    '<td>' + "已完成" + '</td>' +
-                                    //'<td>' + '<button class="btn button-function"disabled" >'+"取消预约"+'</button>' + '</td>' +
-                                    '</tr>';
-                            }
-                        }
-                    }
-                    console.log(temp);
-                    $("#completedTable tr:not(:first)").html(""); /*  除了第一行tr的内容，其余内容清空，防止获取重复的数据  */
-                    $("#completedTable").append(temp);
-
                 }
             });
         }

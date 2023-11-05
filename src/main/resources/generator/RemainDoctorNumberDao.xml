@@ -59,7 +59,7 @@
         from doctors,
              remain_doctor_numbers
         where doctors.doctor_id = remain_doctor_numbers.doctor_id
-          and doctors.doctor_id != '0000001'
+          and doctors.doctor_id != 'DOC0001'
     </select>
     <select id="selectByDoctorID" resultType="com.example.his.models.RemainDoctorNumber" resultMap="BaseResultMap">
         select *
@@ -70,7 +70,7 @@
         SELECT remain_doctor_number_id,doctors.doctor_id,time,number,doctors.doctor_name,doctors.department_id
         FROM doctors,remain_doctor_numbers
         where doctors.doctor_id=#{doctorId,jdbcType=VARCHAR} and doctors.doctor_id=remain_doctor_numbers.doctor_id
-        and doctors.doctor_id!='0000001'
+        and doctors.doctor_id!='DOC0001'
         <!--      and <![CDATA[ DATEDIFF(date(time),CURDATE()) <8 and DATEDIFF(date(time),CURDATE()) >=1  ]]>-->
     </select>
     <select id="getAllDoctorRemainToday" resultType="com.example.his.DTO.RemainDoctorDto" resultMap="resultMap1">
@@ -78,7 +78,7 @@
         FROM doctors,
              remain_doctor_numbers
         where doctors.doctor_id = remain_doctor_numbers.doctor_id
-          and doctors.doctor_id != '0000001'
+          and doctors.doctor_id != 'DOC0001'
           and <![CDATA[ DATE_FORMAT(time, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
 --     and time>NOW()
         ]]>
