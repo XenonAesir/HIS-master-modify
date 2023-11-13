@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.his.generate.ReserveTableDao">
-    <resultMap id="BaseResultMap" type="com.example.his.models.ReserveTable">
+<mapper namespace="com.xenon.hrs.generate.ReserveTableDao">
+    <resultMap id="BaseResultMap" type="com.xenon.hrs.models.ReserveTable">
         <id column="reserve_id" jdbcType="INTEGER" property="reserveId"/>
         <result column="patient_identity" jdbcType="VARCHAR" property="patientIdentity"/>
         <result column="department_id" jdbcType="VARCHAR" property="departmentId"/>
@@ -22,7 +22,7 @@
         where reserve_id = #{reserveId,jdbcType=INTEGER}
     </select>
     <select id="selectViolateByPatientId" parameterType="java.lang.String"
-            resultType="com.example.his.models.ReserveTable" resultMap="BaseResultMap">
+            resultType="com.xenon.hrs.models.ReserveTable" resultMap="BaseResultMap">
         select *
         from violate_tables as vt,
              reserve_tables as rt
@@ -35,14 +35,14 @@
         where reserve_id = #{reserveId,jdbcType=INTEGER}
     </delete>
     <insert id="insert" keyColumn="reserve_id" keyProperty="reserveId"
-            parameterType="com.example.his.models.ReserveTable" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.ReserveTable" useGeneratedKeys="true">
         insert into reserve_tables (patient_identity, department_id, doctor_id,
                                     reserve_type, reserve_state, reserve_time)
         values (#{patientIdentity,jdbcType=VARCHAR}, #{departmentId,jdbcType=VARCHAR}, #{doctorId,jdbcType=VARCHAR},
                 #{reserveType,jdbcType=INTEGER}, #{reserveState,jdbcType=INTEGER}, #{reserveTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" keyColumn="reserve_id" keyProperty="reserveId"
-            parameterType="com.example.his.models.ReserveTable" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.ReserveTable" useGeneratedKeys="true">
         insert into reserve_tables
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientIdentity != null">
@@ -85,7 +85,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.example.his.models.ReserveTable">
+    <update id="updateByPrimaryKeySelective" parameterType="com.xenon.hrs.models.ReserveTable">
         update reserve_tables
         <set>
             <if test="patientIdentity != null">
@@ -109,7 +109,7 @@
         </set>
         where reserve_id = #{reserveId,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.example.his.models.ReserveTable">
+    <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.ReserveTable">
         update reserve_tables
         set patient_identity = #{patientIdentity,jdbcType=VARCHAR},
             department_id    = #{departmentId,jdbcType=VARCHAR},
@@ -120,7 +120,7 @@
         where reserve_id = #{reserveId,jdbcType=INTEGER}
     </update>
 
-    <resultMap id="ResultMap1" type="com.example.his.DTO.ReserveHistoryDto">
+    <resultMap id="ResultMap1" type="com.xenon.hrs.DTO.ReserveHistoryDto">
         <id column="reserve_id" jdbcType="INTEGER" property="reserveId"/>
         <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
         <result column="doctor_name" jdbcType="VARCHAR" property="doctorName"/>
@@ -128,7 +128,7 @@
         <result column="reserve_state" jdbcType="INTEGER" property="reserveState"/>
         <result column="reserve_time" jdbcType="TIMESTAMP" property="reserveTime"/>
     </resultMap>
-    <select id="selectHistoryByPatientId" resultType="com.example.his.DTO.ReserveHistoryDto" resultMap="ResultMap1">
+    <select id="selectHistoryByPatientId" resultType="com.xenon.hrs.DTO.ReserveHistoryDto" resultMap="ResultMap1">
         select reserve_tables.reserve_id,
                departments.department_name,
                doctors.doctor_name,
@@ -144,7 +144,7 @@
     </select>
 
 
-    <resultMap id="ResultMap2" type="com.example.his.DTO.ReserveTableDto">
+    <resultMap id="ResultMap2" type="com.xenon.hrs.DTO.ReserveTableDto">
         <id column="reserve_id" jdbcType="INTEGER" property="reserveId"/>
         <result column="patient_identity" jdbcType="VARCHAR" property="patientIdentity"/>
         <result column="patient_name" jdbcType="VARCHAR" property="patientName"/>
@@ -155,7 +155,7 @@
         <result column="reserve_time" jdbcType="TIMESTAMP" property="reserveTime"/>
     </resultMap>
 
-    <select id="selectInfoByPIdToday" resultType="com.example.his.DTO.ReserveTableDto" resultMap="ResultMap2">
+    <select id="selectInfoByPIdToday" resultType="com.xenon.hrs.DTO.ReserveTableDto" resultMap="ResultMap2">
         select reserve_tables.reserve_id,
                reserve_tables.patient_identity,
                patients.patient_name,

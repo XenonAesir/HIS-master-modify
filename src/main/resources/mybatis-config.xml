@@ -11,11 +11,11 @@
     </settings>
 
     <typeAliases>
-        <package name="com.example.his.models"/>
+        <package name="com.xenon.hrs.models"/>
     </typeAliases>
     <typeHandlers>
-        <typeHandler handler="com.example.his.type.EnabledTypeHandler"
-                     javaType="com.example.his.type.Enabled"/>
+        <typeHandler handler="com.xenon.hrs.type.EnabledTypeHandler"
+                     javaType="com.xenon.hrs.type.Enabled"/>
     </typeHandlers>
 
     <environments default="development">
@@ -33,6 +33,6 @@
     </environments>
 
     <mappers>
-        <package name="com.example.his.generator"/>
+        <package name="com.xenon.hrs.generator"/>
     </mappers>
 </configuration>

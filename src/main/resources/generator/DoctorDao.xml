@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.his.generate.DoctorDao">
-    <resultMap id="BaseResultMap" type="com.example.his.models.Doctor">
+<mapper namespace="com.xenon.hrs.generate.DoctorDao">
+    <resultMap id="BaseResultMap" type="com.xenon.hrs.models.Doctor">
         <id column="doctor_id" jdbcType="VARCHAR" property="doctorId"/>
         <result column="doctor_identity" jdbcType="VARCHAR" property="doctorIdentity"/>
         <result column="doctor_password" jdbcType="VARCHAR" property="doctorPassword"/>
@@ -21,7 +21,7 @@
         from doctors
         where doctor_id = #{doctorId,jdbcType=VARCHAR}
     </select>
-    <select id="getAll" resultType="com.example.his.models.Doctor" resultMap="BaseResultMap">
+    <select id="getAll" resultType="com.xenon.hrs.models.Doctor" resultMap="BaseResultMap">
         select *
         from doctors
         where doctor_id != 'DOC0001';
@@ -31,7 +31,7 @@
         from doctors
         where doctor_id = #{doctorId,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" keyColumn="doctor_id" keyProperty="doctorId" parameterType="com.example.his.models.Doctor"
+    <insert id="insert" keyColumn="doctor_id" keyProperty="doctorId" parameterType="com.xenon.hrs.models.Doctor"
             useGeneratedKeys="true">
         insert into doctors (doctor_identity, doctor_password, doctor_name,
                              doctor_gender, doctor_tel, doctor_address,
@@ -41,7 +41,7 @@
                 #{departmentId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="doctor_id" keyProperty="doctorId"
-            parameterType="com.example.his.models.Doctor" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.Doctor" useGeneratedKeys="true">
         insert into doctors
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="doctorIdentity != null">
@@ -90,7 +90,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.example.his.models.Doctor">
+    <update id="updateByPrimaryKeySelective" parameterType="com.xenon.hrs.models.Doctor">
         update doctors
         <set>
             <if test="doctorIdentity != null">
@@ -117,7 +117,7 @@
         </set>
         where doctor_id = #{doctorId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.example.his.models.Doctor">
+    <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Doctor">
         update doctors
         set doctor_identity = #{doctorIdentity,jdbcType=VARCHAR},
             doctor_password = #{doctorPassword,jdbcType=VARCHAR},

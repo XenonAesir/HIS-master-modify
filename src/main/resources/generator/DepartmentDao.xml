@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.his.generate.DepartmentDao">
-    <resultMap id="BaseResultMap" type="com.example.his.models.Department">
+<mapper namespace="com.xenon.hrs.generate.DepartmentDao">
+    <resultMap id="BaseResultMap" type="com.xenon.hrs.models.Department">
         <id column="department_id" jdbcType="VARCHAR" property="departmentId"/>
         <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
         <result column="department_tel" jdbcType="VARCHAR" property="departmentTel"/>
@@ -84,13 +84,13 @@
     </delete>
 
     <insert id="insert" keyColumn="department_id" keyProperty="departmentId"
-            parameterType="com.example.his.models.Department" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.Department" useGeneratedKeys="true">
         insert into departments (department_name, department_tel, department_address)
         values (#{departmentName,jdbcType=VARCHAR}, #{departmentTel,jdbcType=VARCHAR},
                 #{departmentAddress,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="department_id" keyProperty="departmentId"
-            parameterType="com.example.his.models.Department" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.Department" useGeneratedKeys="true">
         insert into departments
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="departmentName != null">
@@ -116,7 +116,7 @@
         </trim>
     </insert>
 
-    <select id="getAll" resultType="com.example.his.models.Department" resultMap="BaseResultMap">
+    <select id="getAll" resultType="com.xenon.hrs.models.Department" resultMap="BaseResultMap">
         select *
         from departments
     </select>
@@ -150,7 +150,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.example.his.models.Department">
+    <update id="updateByPrimaryKeySelective" parameterType="com.xenon.hrs.models.Department">
         update departments
         <set>
             <if test="departmentName != null">
@@ -165,7 +165,7 @@
         </set>
         where department_id = #{departmentId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.example.his.models.Department">
+    <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Department">
         update departments
         set department_name    = #{departmentName,jdbcType=VARCHAR},
             department_tel     = #{departmentTel,jdbcType=VARCHAR},

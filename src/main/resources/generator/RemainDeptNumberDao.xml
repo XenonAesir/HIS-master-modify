@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.his.generate.RemainDeptNumberDao">
-    <resultMap id="BaseResultMap" type="com.example.his.models.RemainDeptNumber">
+<mapper namespace="com.xenon.hrs.generate.RemainDeptNumberDao">
+    <resultMap id="BaseResultMap" type="com.xenon.hrs.models.RemainDeptNumber">
         <id column="remain_dept_number_id" jdbcType="INTEGER" property="remainDeptNumberId"/>
         <result column="department_id" jdbcType="VARCHAR" property="departmentId"/>
         <result column="time" jdbcType="TIMESTAMP" property="time"/>
@@ -19,21 +19,21 @@
         from remain_dept_numbers
         where remain_dept_number_id = #{remainDeptNumberId,jdbcType=INTEGER}
     </select>
-    <select id="getAll" resultType="com.example.his.models.RemainDeptNumber" resultMap="BaseResultMap">
+    <select id="getAll" resultType="com.xenon.hrs.models.RemainDeptNumber" resultMap="BaseResultMap">
         select *
         from remain_dept_numbers
     </select>
 
-    <select id="selectByDeptId" resultType="com.example.his.models.RemainDeptNumber" resultMap="BaseResultMap">
+    <select id="selectByDeptId" resultType="com.xenon.hrs.models.RemainDeptNumber" resultMap="BaseResultMap">
         select *
         from remain_dept_numbers
         where department_id = #{DeptId,jdbcType=VARCHAR}
     </select>
-    <select id="getAllToday" resultType="com.example.his.models.RemainDeptNumber" resultMap="BaseResultMap">
+    <select id="getAllToday" resultType="com.xenon.hrs.models.RemainDeptNumber" resultMap="BaseResultMap">
         select *
         from remain_dept_numbers
         where <![CDATA[ DATE_FORMAT(time, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
---                                           and time>NOW()
+--                      时间约束                     and time>NOW()
         ]]>
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -42,12 +42,12 @@
         where remain_dept_number_id = #{remainDeptNumberId,jdbcType=INTEGER}
     </delete>
     <insert id="insert" keyColumn="remain_dept_number_id" keyProperty="remainDeptNumberId"
-            parameterType="com.example.his.models.RemainDeptNumber" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.RemainDeptNumber" useGeneratedKeys="true">
         insert into remain_dept_numbers (department_id, `time`, `number`)
         values (#{departmentId,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{number,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" keyColumn="remain_dept_number_id" keyProperty="remainDeptNumberId"
-            parameterType="com.example.his.models.RemainDeptNumber" useGeneratedKeys="true">
+            parameterType="com.xenon.hrs.models.RemainDeptNumber" useGeneratedKeys="true">
         insert into remain_dept_numbers
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="departmentId != null">
@@ -72,7 +72,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.example.his.models.RemainDeptNumber">
+    <update id="updateByPrimaryKeySelective" parameterType="com.xenon.hrs.models.RemainDeptNumber">
         update remain_dept_numbers
         <set>
             <if test="departmentId != null">
@@ -87,7 +87,7 @@
         </set>
         where remain_dept_number_id = #{remainDeptNumberId,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.example.his.models.RemainDeptNumber">
+    <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.RemainDeptNumber">
         update remain_dept_numbers
         set department_id = #{departmentId,jdbcType=VARCHAR},
             `time`        = #{time,jdbcType=TIMESTAMP},
