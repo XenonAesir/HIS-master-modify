@@ -288,7 +288,7 @@ public class AppointmentController
         return JSON.toJSONString(parameter);
     }
 
-    // //收费人员取消预约
+    // //管理人员取消预约
     // @RequestMapping("/appoint_cancel_staff")
     // @ResponseBody
     // public String appointCancelStaff(HttpServletRequest request, HttpServletResponse response)

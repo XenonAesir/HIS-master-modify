@@ -1,9 +1,9 @@
 package com.xenon.hrs.service.impl;
 
-import com.xenon.hrs.generate.CashierDao;
+import com.xenon.hrs.generate.AdminDao;
 import com.xenon.hrs.generate.DoctorDao;
 import com.xenon.hrs.generate.PatientDao;
-import com.xenon.hrs.models.Cashier;
+import com.xenon.hrs.models.Admin;
 import com.xenon.hrs.models.Doctor;
 import com.xenon.hrs.models.Patient;
 import com.xenon.hrs.service.LoginService;
@@ -18,7 +18,7 @@ public class LoginServiceImpl implements LoginService
     @Autowired
     DoctorDao doctorDao;
     @Autowired
-    CashierDao cashierDao;
+    AdminDao adminDao;
 
     @Override
     public int login(String patientIdentity, String password) {
@@ -31,8 +31,8 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public Cashier selectCashier(String staffId) {
-        return cashierDao.selectByPrimaryKey(staffId);
+    public Admin selectAdmin(String staffId) {
+        return adminDao.selectByPrimaryKey(staffId);
     }
 
     @Override

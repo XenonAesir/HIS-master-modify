@@ -1,7 +1,7 @@
 package com.xenon.hrs.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.xenon.hrs.models.Cashier;
+import com.xenon.hrs.models.Admin;
 import com.xenon.hrs.models.Doctor;
 import com.xenon.hrs.models.Patient;
 import com.xenon.hrs.service.LoginService;
@@ -67,29 +67,29 @@ public class LoginController
         System.out.println("staff_login" + staffId + "    " + password);
 
         //判断员工类型
-        if (staffId.startsWith("P"))
-        {//P开头：收费人员
-            Cashier cashier = loginService.selectCashier(staffId);
+        if (staffId.startsWith("A"))
+        {//A开头：管理人员
+            Admin admin = loginService.selectAdmin(staffId);
             System.out.println("登录密码:" + password);
-            if (null == cashier)
+            if (null == admin)
             {
                 parameter.put("status", "null");
                 parameter.put("msg", "用户登录失败,无此用户");
                 System.out.println("用户登录失败,无此用户");
             }
-            else if (!Objects.equals(cashier.getCashierPassword(), password))
+            else if (!Objects.equals(admin.getAdminPassword(), password))
             {
-                System.out.println("密码:" + cashier.getCashierPassword());
+                System.out.println("密码:" + admin.getAdminPassword());
                 parameter.put("status", "fail");
                 parameter.put("msg", "用户登录失败,密码错误");
                 System.out.println("用户登录失败,密码错误");
             }
             else
             {
-                request.getSession().setAttribute("cashierInfo", cashier);
+                request.getSession().setAttribute("adminInfo", admin);
                 parameter.put("status", "ok1");
                 parameter.put("msg", "用户登录成功");
-                parameter.put("data", cashier.getCashierId());
+                parameter.put("data", admin.getAdminId());
                 System.out.println("用户登录成功");
             }
         }//if (staffId.startsWith("P"))

@@ -19,12 +19,12 @@ public class RemeberLoginIntercepter implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         Object patientSession = session.getAttribute("patientInfo");//查找患者session
-        Object cashierSession = session.getAttribute("cashierInfo");//查找员工session
+        Object adminSession = session.getAttribute("adminInfo");//查找员工session
         Object doctorSession = session.getAttribute("doctorInfo");//查找员工session
         Object pharmacistSession = session.getAttribute("pharmacistInfo");//查找员工session
 
 
-        // if(null==patientSession && null==cashierSession && null==doctorSession && null==pharmacistSession){
+        // if(null==patientSession && null==adminSession && null==doctorSession && null==pharmacistSession){
         //     response.sendRedirect(request.getContextPath()+"/login.html");
         //     return false;
         // }

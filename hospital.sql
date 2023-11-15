@@ -16,26 +16,26 @@ Date: 2023-11-06 09:07:17
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for cashiers
+-- Table structure for admins
 -- ----------------------------
-DROP TABLE IF EXISTS `cashiers`;
-CREATE TABLE `cashiers` (
-  `cashier_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '工号',
-  `cashier_identity` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '身份证号',
-  `cashier_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
-  `cashier_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '姓名',
-  `cashier_gender` int DEFAULT '1' COMMENT '性别1男,0女',
-  `cashier_tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '电话',
-  `cashier_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '家庭住址',
-  PRIMARY KEY (`cashier_id`)
+DROP TABLE IF EXISTS `admins`;
+CREATE TABLE `admins` (
+  `admin_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '工号',
+  `admin_identity` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '身份证号',
+  `admin_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
+  `admin_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '姓名',
+  `admin_gender` int DEFAULT '1' COMMENT '性别1男,0女',
+  `admin_tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '电话',
+  `admin_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '家庭住址',
+  PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
--- Records of cashiers
+-- Records of admins
 -- ----------------------------
-INSERT INTO `cashiers` VALUES ('P0001001', '428402198005042623', '123456', '章莹春', '0', '13908709032', ' 石家庄市裕华区东岗路89号');
-INSERT INTO `cashiers` VALUES ('P0001002', '428402198507126122', '123456', '廖筱英', '0', '13908709033', ' 石家庄市裕华区东岗路89号');
-INSERT INTO `cashiers` VALUES ('P0001003', '428402198804163225', '123456', '朱慧敏', '0', '13908709033', ' 石家庄市裕华区东岗路89号');
+INSERT INTO `admins` VALUES ('P0001001', '428402198005042623', '123456', '章莹春', '0', '13908709032', ' 石家庄市裕华区东岗路89号');
+INSERT INTO `admins` VALUES ('P0001002', '428402198507126122', '123456', '廖筱英', '0', '13908709033', ' 石家庄市裕华区东岗路89号');
+INSERT INTO `admins` VALUES ('P0001003', '428402198804163225', '123456', '朱慧敏', '0', '13908709033', ' 石家庄市裕华区东岗路89号');
 
 -- ----------------------------
 -- Table structure for check_tables
@@ -273,16 +273,16 @@ DROP TABLE IF EXISTS `pay_tables`;
 CREATE TABLE `pay_tables` (
   `pay_id` int NOT NULL AUTO_INCREMENT COMMENT '缴费单号',
   `patient_identity` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '患者身份证号',
-  `cashier_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '收费人员工号',
+  `admin_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '管理人员工号',
   `pay_item` varchar(255) DEFAULT '' COMMENT '缴费项目',
   `pay_way` int DEFAULT '0' COMMENT '缴费方式:0现金,1微信,2支付宝',
   `pay_money` float DEFAULT '0' COMMENT '缴费金额',
   `pay_time` datetime DEFAULT NULL COMMENT '缴费时间',
   PRIMARY KEY (`pay_id`),
   KEY `patient_identity` (`patient_identity`) USING BTREE,
-  KEY `doctor_id` (`cashier_id`) USING BTREE,
+  KEY `doctor_id` (`admin_id`) USING BTREE,
   CONSTRAINT `pay_tables_ibfk_1` FOREIGN KEY (`patient_identity`) REFERENCES `patients` (`patient_identity`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `pay_tables_ibfk_3` FOREIGN KEY (`cashier_id`) REFERENCES `cashiers` (`cashier_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `pay_tables_ibfk_3` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
@@ -388,17 +388,17 @@ DROP TABLE IF EXISTS `refund_tables`;
 CREATE TABLE `refund_tables` (
   `refund_id` int NOT NULL AUTO_INCREMENT COMMENT '退费单号',
   `patient_identity` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '患者身份证号',
-  `cashier_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '收费人员工号',
+  `admin_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '管理人员工号',
   `pay_id` int DEFAULT NULL COMMENT '缴费单号',
   `refund_way` int DEFAULT '0' COMMENT '退费方式:0现金,1微信,2支付宝',
   `refund_money` float DEFAULT '0' COMMENT '退费金额',
   `refund_time` datetime DEFAULT NULL COMMENT '退费时间',
   PRIMARY KEY (`refund_id`),
   KEY `patient_identity` (`patient_identity`) USING BTREE,
-  KEY `doctor_id` (`cashier_id`) USING BTREE,
+  KEY `doctor_id` (`admin_id`) USING BTREE,
   KEY `pay_id` (`pay_id`),
   CONSTRAINT `refund_tables_ibfk_1` FOREIGN KEY (`patient_identity`) REFERENCES `patients` (`patient_identity`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `refund_tables_ibfk_2` FOREIGN KEY (`cashier_id`) REFERENCES `cashiers` (`cashier_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `refund_tables_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xenon.hrs.generate.AdminDao">
+  <resultMap id="BaseResultMap" type="com.xenon.hrs.models.Admin">
+    <id column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="admin_identity" jdbcType="VARCHAR" property="adminIdentity" />
+    <result column="admin_password" jdbcType="VARCHAR" property="adminPassword" />
+    <result column="admin_name" jdbcType="VARCHAR" property="adminName" />
+    <result column="admin_gender" jdbcType="INTEGER" property="adminGender" />
+    <result column="admin_tel" jdbcType="VARCHAR" property="adminTel" />
+    <result column="admin_address" jdbcType="VARCHAR" property="adminAddress" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    admin_id, admin_identity, admin_password, admin_name, admin_gender, admin_tel,
+    admin_address
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admins
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from admins
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="admin_id" keyProperty="adminId" parameterType="com.xenon.hrs.models.Admin" useGeneratedKeys="true">
+    insert into admins (admin_identity, admin_password,
+      admin_name, admin_gender, admin_tel,
+      admin_address)
+    values (#{adminIdentity,jdbcType=VARCHAR}, #{adminPassword,jdbcType=VARCHAR},
+      #{adminName,jdbcType=VARCHAR}, #{adminGender,jdbcType=INTEGER}, #{adminTel,jdbcType=VARCHAR},
+      #{adminAddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="admin_id" keyProperty="adminId" parameterType="com.xenon.hrs.models.Admin" useGeneratedKeys="true">
+    insert into admins
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminIdentity != null">
+        admin_identity,
+      </if>
+      <if test="adminPassword != null">
+        admin_password,
+      </if>
+      <if test="adminName != null">
+        admin_name,
+      </if>
+      <if test="adminGender != null">
+        admin_gender,
+      </if>
+      <if test="adminTel != null">
+        admin_tel,
+      </if>
+      <if test="adminAddress != null">
+        admin_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminIdentity != null">
+        #{adminIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPassword != null">
+        #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminName != null">
+        #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminGender != null">
+        #{adminGender,jdbcType=INTEGER},
+      </if>
+      <if test="adminTel != null">
+        #{adminTel,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAddress != null">
+        #{adminAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xenon.hrs.models.Admin">
+    update admins
+    <set>
+      <if test="adminIdentity != null">
+        admin_identity = #{adminIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPassword != null">
+        admin_password = #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminName != null">
+        admin_name = #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminGender != null">
+        admin_gender = #{adminGender,jdbcType=INTEGER},
+      </if>
+      <if test="adminTel != null">
+        admin_tel = #{adminTel,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAddress != null">
+        admin_address = #{adminAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Admin">
+    update admins
+    set admin_identity = #{adminIdentity,jdbcType=VARCHAR},
+      admin_password = #{adminPassword,jdbcType=VARCHAR},
+      admin_name = #{adminName,jdbcType=VARCHAR},
+      admin_gender = #{adminGender,jdbcType=INTEGER},
+      admin_tel = #{adminTel,jdbcType=VARCHAR},
+      admin_address = #{adminAddress,jdbcType=VARCHAR}
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+</mapper>

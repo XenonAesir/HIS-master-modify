@@ -192,8 +192,8 @@
                 success: function (data) {
                     console.log(data);
                     if (data.status == "ok1") {
-                        document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //收费人员登录成功
-                        sessionStorage.setItem("cashierId", data.data)
+                        document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //管理人员登录成功
+                        sessionStorage.setItem("adminId", data.data)
                         window.location.href = "pay-main.html";
                     } else if (data.status == "ok2") {
                         document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //医生登录成功

@@ -76,7 +76,7 @@
                             <div class="main-menu" style="float: left;">
                                 <nav class="navigation">
                                     <ul class="nav menu">
-                                        <li><a href="pay-main.html">收费</a></li>
+                                        <li><a href="pay-main.html">管理</a></li>
                                         <li><a href="pay-new-app.html">现场挂号</a></li>
                                         <li><a href="pay-app.html">预约取号</a></li>
                                         <li class="active"><a href="pay-history.html">缴费单记录</a></li>
@@ -125,7 +125,7 @@
                         <th>患者姓名</th>
                         <th>患者身份证号</th>
                         <th>项目名称</th>
-                        <th>收费人</th>
+                        <th>管理人</th>
                         <th>缴费时间</th>
                     </tr>
                 </thead>
@@ -242,7 +242,7 @@
                             '<td>' + data[i].patientName + '</td>' +
                             '<td>' + data[i].patientIdentity + '</td>' +
                             '<td>' + data[i].payItem + '</td>' +
-                            '<td>' + data[i].cashierName + '</td>' +
+                            '<td>' + data[i].adminName + '</td>' +
                             '<td>' + date+' '+time  + '</td>' +
                             '</tr>'
                         )
