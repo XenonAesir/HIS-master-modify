@@ -153,8 +153,6 @@ public class LoginController
         String userIdentity = JwtUtils.getClaims(token).getSubject();
 
         Patient patient = loginService.selectPatient(userIdentity);
-        Doctor doctor = loginService.selectDoctor(userIdentity);
-        Admin admin = loginService.selectAdmin(userIdentity);
 
         if (patient != null)
         {
@@ -162,25 +160,12 @@ public class LoginController
             parameter.put("status", "ok");
             parameter.put("msg", "用户登录成功");
             parameter.put("data", patient.getPatientIdentity());
-
-            System.out.println("用户登录成功");
-            return JSON.toJSONString(parameter);
-        }
-        if (doctor != null)
-        {
-            request.getSession().setAttribute("doctorInfo", doctor);
-            parameter.put("status", "ok2");
-            parameter.put("msg", "用户登录成功");
-            parameter.put("data", doctor.getDoctorId());
             System.out.println("用户登录成功");
         }
-        if (admin != null)
+        else
         {
-            request.getSession().setAttribute("adminInfo", admin);
-            parameter.put("status", "ok1");
-            parameter.put("msg", "用户登录成功");
-            parameter.put("data", admin.getAdminId());
-            System.out.println("用户登录成功");
+            parameter.put("status", "fail");
+            parameter.put("msg", "token解析失败");
         }
 
         parameter.put("status", "fail");

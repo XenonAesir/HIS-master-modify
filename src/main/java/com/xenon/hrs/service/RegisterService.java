@@ -7,6 +7,8 @@ public interface RegisterService
 {
     int addPatient(Patient patient);
 
+    int updatePatient(Patient patient);
+
     Patient selectPatient(String patientIdentity);
 
 }

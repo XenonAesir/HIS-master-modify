@@ -14,12 +14,20 @@ public class RegisterServiceImpl implements RegisterService
 
     //患者注册
     @Override
-    public int addPatient(Patient patient) {
+    public int addPatient(Patient patient)
+    {
         return patientDao.insertSelective(patient);
     }
 
     @Override
-    public Patient selectPatient(String patientIdentity) {
+    public int updatePatient(Patient patient)
+    {
+        return patientDao.updateByPrimaryKey(patient);
+    }
+
+    @Override
+    public Patient selectPatient(String patientIdentity)
+    {
         return patientDao.selectByPrimaryKey(patientIdentity);
     }
 
