@@ -5,11 +5,13 @@ import com.xenon.hrs.models.Admin;
 import com.xenon.hrs.models.Doctor;
 import com.xenon.hrs.models.Patient;
 import com.xenon.hrs.service.LoginService;
+import com.xenon.hrs.tool.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -52,6 +54,8 @@ public class LoginController
             parameter.put("status", "ok");
             parameter.put("msg", "用户登录成功");
             parameter.put("data", patient.getPatientIdentity());
+            String token = JwtUtils.getToken(patientIdentity);
+            parameter.put("token", token);
             System.out.println("用户登录成功");
             return JSON.toJSONString(parameter);
         }
@@ -67,8 +71,9 @@ public class LoginController
         System.out.println("staff_login" + staffId + "    " + password);
 
         //判断员工类型
+        //A开头：管理人员
         if (staffId.startsWith("A"))
-        {//A开头：管理人员
+        {
             Admin admin = loginService.selectAdmin(staffId);
             System.out.println("登录密码:" + password);
             if (null == admin)
@@ -90,11 +95,15 @@ public class LoginController
                 parameter.put("status", "ok1");
                 parameter.put("msg", "用户登录成功");
                 parameter.put("data", admin.getAdminId());
+                String token = JwtUtils.getToken(admin.getAdminId());
+                parameter.put("token", token);
                 System.out.println("用户登录成功");
             }
         }//if (staffId.startsWith("P"))
+
+        //D开头：医生
         else if (staffId.startsWith("D"))
-        {//D开头：医生
+        {
             Doctor doctor = loginService.selectDoctor(staffId);
             System.out.println("登录密码:" + password);
             if (null == doctor)
@@ -116,6 +125,8 @@ public class LoginController
                 parameter.put("status", "ok2");
                 parameter.put("msg", "用户登录成功");
                 parameter.put("data", doctor.getDoctorId());
+                String token = JwtUtils.getToken(doctor.getDoctorId());
+                parameter.put("token", token);
                 System.out.println("用户登录成功");
             }
         }//else if (staffId.startsWith("D"))
@@ -126,6 +137,113 @@ public class LoginController
             parameter.put("msg", "用户登录失败，请检查工号是否正确");
             System.out.println("用户登录失败，请检查工号是否正确");
         }//else
+
+        return JSON.toJSONString(parameter);
+    }
+
+    @RequestMapping("/patient_token")
+    @ResponseBody
+    public String decodePatientToken(HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, String> parameter = new HashMap<>();
+
+        String token = request.getParameter("token");
+        System.out.println(token);
+
+        String userIdentity = JwtUtils.getClaims(token).getSubject();
+
+        Patient patient = loginService.selectPatient(userIdentity);
+        Doctor doctor = loginService.selectDoctor(userIdentity);
+        Admin admin = loginService.selectAdmin(userIdentity);
+
+        if (patient != null)
+        {
+            request.getSession().setAttribute("patientInfo", patient);
+            parameter.put("status", "ok");
+            parameter.put("msg", "用户登录成功");
+            parameter.put("data", patient.getPatientIdentity());
+
+            System.out.println("用户登录成功");
+            return JSON.toJSONString(parameter);
+        }
+        if (doctor != null)
+        {
+            request.getSession().setAttribute("doctorInfo", doctor);
+            parameter.put("status", "ok2");
+            parameter.put("msg", "用户登录成功");
+            parameter.put("data", doctor.getDoctorId());
+            System.out.println("用户登录成功");
+        }
+        if (admin != null)
+        {
+            request.getSession().setAttribute("adminInfo", admin);
+            parameter.put("status", "ok1");
+            parameter.put("msg", "用户登录成功");
+            parameter.put("data", admin.getAdminId());
+            System.out.println("用户登录成功");
+        }
+
+        parameter.put("status", "fail");
+        return JSON.toJSONString(parameter);
+    }
+
+    @RequestMapping("/admin_token")
+    @ResponseBody
+    public String decodeAdminToken(HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, String> parameter = new HashMap<>();
+
+        String token = request.getParameter("token");
+        System.out.println(token);
+
+        String userIdentity = JwtUtils.getClaims(token).getSubject();
+
+        Admin admin = loginService.selectAdmin(userIdentity);
+
+        if (admin != null)
+        {
+            request.getSession().setAttribute("adminInfo", admin);
+            parameter.put("status", "ok1");
+            parameter.put("msg", "用户登录成功");
+            parameter.put("data", admin.getAdminId());
+            System.out.println("用户登录成功");
+        }
+        else
+        {
+            parameter.put("status", "fail");
+            parameter.put("msg", "token解析失败");
+        }
+
+
+        return JSON.toJSONString(parameter);
+    }
+
+    @RequestMapping("/doctor_token")
+    @ResponseBody
+    public String decodeDoctorToken(HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, String> parameter = new HashMap<>();
+
+        String token = request.getParameter("token");
+        System.out.println(token);
+
+        String userIdentity = JwtUtils.getClaims(token).getSubject();
+
+        Doctor doctor = loginService.selectDoctor(userIdentity);
+
+        if (doctor != null)
+        {
+            request.getSession().setAttribute("doctorInfo", doctor);
+            parameter.put("status", "ok2");
+            parameter.put("msg", "用户登录成功");
+            parameter.put("data", doctor.getDoctorId());
+            System.out.println("用户登录成功");
+        }
+        else
+        {
+            parameter.put("status", "fail");
+            parameter.put("msg", "token解析失败");
+        }
         return JSON.toJSONString(parameter);
     }
 }

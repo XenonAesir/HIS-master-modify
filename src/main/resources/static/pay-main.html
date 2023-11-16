@@ -84,7 +84,7 @@
                                 </nav>
                             </div>
                             <div class="get-quote" style="float: right; margin-top: 10px;">
-                                <a href="staff-login.html" class="btn">退出</a>
+                                <a href="index2.html" class="btn">退出</a>
                             </div>
                         </div>
                     </div>
@@ -285,6 +285,12 @@
     </style>
 
     <script>
+        $('.get-quote a').click(function () {
+            localStorage.removeItem('admin_token');
+        });
+
+
+
         $(document).ready(function () {
             payMoney = 0
             payWayList = ['现金支付', '微信支付', '支付宝支付']
@@ -344,23 +350,23 @@
                     var itemPrice = 0
                     var itemPriceSum = 0
                     // var itemId=''
-                    var itemType=''
-                    var itemName=''
-                    var itemNumer=0
-                    if (itemId.substring(0,1) == 'C') { // 检查
+                    var itemType = ''
+                    var itemName = ''
+                    var itemNumer = 0
+                    if (itemId.substring(0, 1) == 'C') { // 检查
                         // itemId=data.checkId
                         itemType = '检查'
-                        itemName=data.checkDescription
+                        itemName = data.checkDescription
                         itemPrice = checkPrice[data.checkDescription]
-                        itemNumer=1
-                        itemPriceSum=itemPrice
+                        itemNumer = 1
+                        itemPriceSum = itemPrice
                     } else {
                         // itemId=data.prescriptionId
                         itemType = '处方'
-                        itemName=data.medicineName
+                        itemName = data.medicineName
                         itemPrice = data.medicineMoney
-                        itemNumer=data.medicineNumber
-                        itemPriceSum=itemNumer*itemPrice
+                        itemNumer = data.medicineNumber
+                        itemPriceSum = itemNumer * itemPrice
                     }
                     console.log(itemName)
 
@@ -402,9 +408,9 @@
         }
 
         $('.pay-btn').click(function () {
-            if($(this).text() == '取消支付') {
+            if ($(this).text() == '取消支付') {
                 var option = confirm('确认取消支付？')
-                if(option) {
+                if (option) {
                     location.reload()
                 }
                 return;

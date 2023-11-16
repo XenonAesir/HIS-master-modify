@@ -121,10 +121,10 @@
 								<nav class="navigation">
 									<ul class="nav menu">
 										<li><a href="index2.html">首页</a></li>
-<!--										<li><a href="#">医院介绍</a></li>-->
-<!--										<li><a href="#">科室简介</a></li>-->
-<!--										<li><a href="#">专家教授</a></li>-->
-<!--										<li><a href="#">联系我们</a></li>-->
+										<!--										<li><a href="#">医院介绍</a></li>-->
+										<!--										<li><a href="#">科室简介</a></li>-->
+										<!--										<li><a href="#">专家教授</a></li>-->
+										<!--										<li><a href="#">联系我们</a></li>-->
 										<li><a href="staff-login.html">员工入口</a></li>
 									</ul>
 								</nav>
@@ -168,7 +168,8 @@
 									</div>
 									<div class="col-12">
 										<div class="form-group login-btn">
-											<button class="btn" id="button" type="button" onclick="logining()">登录</button>
+											<button class="btn" id="button" type="button"
+												onclick="logining()">登录</button>
 										</div>
 										<div class="checkbox">
 											<label class="checkbox-inline" for="2"><input name="news" id="2"
@@ -188,7 +189,7 @@
 	<!--/ End Login -->
 
 	<!-- Footer Area -->
-<!--	<footer id="footer" class="footer ">
+	<!--	<footer id="footer" class="footer ">
 		&lt;!&ndash; Footer Top &ndash;&gt;
 		<div class="footer-top">
 			<div class="container">
@@ -330,12 +331,12 @@
 	<script type="text/javascript">
 		function check() {
 			var password = document.getElementById("password").value;
-			if(password==""){
-				document.getElementById("tishi").innerHTML="<br><font color='green'>请输入密码</font>";
+			if (password == "") {
+				document.getElementById("tishi").innerHTML = "<br><font color='green'>请输入密码</font>";
 				document.getElementById("button").disabled = true;
 			}
-			else{
-				document.getElementById("tishi").innerHTML="";
+			else {
+				document.getElementById("tishi").innerHTML = "";
 				document.getElementById("button").disabled = false;
 			}
 		}
@@ -343,25 +344,40 @@
 			var patientIdentity = document.getElementById("patientIdentity").value;
 			var password = document.getElementById("password").value;
 			$.ajax({
-				url : "/login",
-				type : "POST",
-				data :{
-					"patientIdentity":patientIdentity,
+				url: "/login",
+				type: "POST",
+				data: {
+					"patientIdentity": patientIdentity,
 					"password": password,
 				},
-				dataType : "json",
+				dataType: "json",
 				async: true,
-				success : function(data) {
+				success: function (data) {
 					console.log(data);
 					if (data.status == "ok") {
-						document.getElementById("tishi").innerHTML="<br><font color='red'>"+data.msg+"</font>";  //注册成功
-						sessionStorage.setItem("patientID",data.data)
+						document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //登录成功
+						sessionStorage.setItem("patientID", data.data)
+
+
+						// 如果用户选择“记住我的登录状态”，将 Token 存储到本地存储中
+						var rememberMe = document.getElementById("2").checked; // 假设记住状态的复选框的id为“2”
+						if (rememberMe) {
+							console.log("进入复选框")
+							// 假设从后端获取的 Token 存在名为 data 的对象中
+							var token = data.token; // 假设 Token 存在于返回的 data 对象中
+
+							// 将 Token 存储到 localStorage 中
+							localStorage.setItem("patient_token", token);
+							console.log("patient_token是" + token)
+						}
+
+
 						window.location.href = "index2.html";
-					}else if (data.status == "fail"){
-						document.getElementById("tishi").innerHTML="<br><font color='red'>"+data.msg+"</font>";
+					} else if (data.status == "fail") {
+						document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";
 					}
-					else if (data.status == "null"){
-						document.getElementById("tishi").innerHTML="<br><font color='red'>"+data.msg+"</font>";
+					else if (data.status == "null") {
+						document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";
 					}
 				},
 				// error:function (res) {
@@ -370,6 +386,45 @@
 
 			});
 		}
+		// 页面加载时检查本地存储中是否存在 Token
+		window.onload = function () {
+			// 从本地存储获取 Token
+			var token = localStorage.getItem("patient_token");
+			console.log("patient_token是" + token)
+
+			// 如果存在 Token，则可以使用它向后端发送请求
+			if (token) {
+				$.ajax({
+					url: "/patient_token",
+					type: "POST",
+					data: {
+						"token": token,
+					},
+					dataType: "json",
+					async: true,
+					success: function (data) {
+						console.log(data);
+						if (data.status == "ok") {
+							document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //登录成功
+							sessionStorage.setItem("patientID", data.data)
+
+							window.location.href = "index2.html";
+						} else if (data.status == "fail") {
+							document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";
+						}
+						else if (data.status == "null") {
+							document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";
+						}
+					},
+					// error:function (res) {
+					// 	alert("请求错误！",console.res)
+					// }
+
+				});
+			}
+		}
+
+
 	</script>
 </body>
 
