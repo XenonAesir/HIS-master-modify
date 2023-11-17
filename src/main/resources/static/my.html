@@ -173,6 +173,7 @@
                                         <tr>
                                             <th>预约单号</th>
                                             <th>预约项目</th>
+                                            <th>预约就诊日期</th>
                                             <th>预约就诊时间</th>
                                             <th>当前状态</th>
                                             <th>操作</th>
@@ -198,6 +199,7 @@
                                         <tr>
                                             <th>预约单号</th>
                                             <th>预约项目</th>
+                                            <th>预约就诊日期</th>
                                             <th>预约就诊时间</th>
                                             <th>当前状态</th>
                                             <th>操作</th>
@@ -224,6 +226,7 @@
                                         <tr>
                                             <th>预约单号</th>
                                             <th>预约项目</th>
+                                            <th>预约就诊日期</th>
                                             <th>预约就诊时间</th>
                                             <th>当前状态</th>
                                         </tr>
@@ -442,6 +445,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已取消" + '</td>' +
                                     '<td>' + '<button class="btn button-function"disabled>' + "取消预约" + '</button>' + '</td>' +
@@ -452,6 +456,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >' + "取消预约" + '</button>' + '</td>' +
@@ -467,6 +472,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName + "-" + "普通号" + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已取消" + '</td>' +
                                     '<td>' + '<button class="btn button-function"disabled>' + "取消预约" + '</button>' + '</td>' +
@@ -477,6 +483,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName + "-" + "普通号" + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >' + "取消预约" + '</button>' + '</td>' +
@@ -527,6 +534,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >' + "取消预约" + '</button>' + '</td>' +
@@ -537,6 +545,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName + "-" + "普通号" + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已预约" + '</td>' +
                                     '<td>' + '<button class="btn button-function" onclick="confirmCancel(this)" >' + "取消预约" + '</button>' + '</td>' +
@@ -587,6 +596,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + "专家号-" + data[$i].doctorName + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已取消" + '</td>' +
                                     //'<td>' + '<button class="btn button-function"disabled" >'+"取消预约"+'</button>' + '</td>' +
@@ -597,6 +607,7 @@
                                     '<tr data-id="' + data[$i].reserveId + '">' +
                                     '<td>' + data[$i].reserveId + '</td>' +
                                     '<td>' + data[$i].departmentName + "-" + "普通号" + '</td>' +
+                                    '<td>' + date + '</td>' +
                                     '<td>' + time + '</td>' +
                                     '<td>' + "已取消" + '</td>' +
                                     //'<td>' + '<button class="btn button-function"disabled" >'+"取消预约"+'</button>' + '</td>' +
