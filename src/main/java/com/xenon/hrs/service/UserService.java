@@ -3,7 +3,7 @@ package com.xenon.hrs.service;
 import com.xenon.hrs.models.Patient;
 
 
-public interface RegisterService
+public interface UserService
 {
     int addPatient(Patient patient);
 

@@ -2,7 +2,7 @@ package com.xenon.hrs.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.xenon.hrs.models.Patient;
-import com.xenon.hrs.service.RegisterService;
+import com.xenon.hrs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class RegisterController
+public class UserController
 {
     @Autowired
-    RegisterService registerService;
+    UserService userService;
 
     @RequestMapping("/register")
     @ResponseBody
@@ -36,7 +36,7 @@ public class RegisterController
         String patientAddress = request.getParameter("patientAddress");
         String patientTel = request.getParameter("patientTel");
 
-        Patient patient = registerService.selectPatient(patientIdentity);
+        Patient patient = userService.selectPatient(patientIdentity);
         if (null == patient)
         {
             Patient patient1 = new Patient(patientIdentity, password1);
@@ -45,7 +45,7 @@ public class RegisterController
             patient1.setPatientGender(patientGender);
             patient1.setPatientIsBlack(0);
             patient1.setPatientTel(patientTel);
-            registerService.addPatient(patient1);
+            userService.addPatient(patient1);
             session.setAttribute("patientInfo", patient1);
             parameter.put("status", "ok");
             System.out.println("用户注册成功");
@@ -68,7 +68,7 @@ public class RegisterController
         String patientName = request.getParameter("patientName");
         String patientTel = request.getParameter("patientTel");
 
-        Patient patient = registerService.selectPatient(patientIdentity);
+        Patient patient = userService.selectPatient(patientIdentity);
         if (null == patient)
         {
 
@@ -99,12 +99,12 @@ public class RegisterController
         String patientIdentity = request.getParameter("patientIdentity");
         String password1 = request.getParameter("password1");
 
-        Patient patient = registerService.selectPatient(patientIdentity);
+        Patient patient = userService.selectPatient(patientIdentity);
         if (null != patient)
         {
             patient.setPatientPassword(password1);
 
-            registerService.updatePatient(patient);
+            userService.updatePatient(patient);
 
             session.setAttribute("patientInfo", patient);
             parameter.put("status", "ok");
@@ -117,5 +117,30 @@ public class RegisterController
             System.out.println("失败");
             return JSON.toJSONString(parameter);
         }
+    }
+
+    @RequestMapping("/exit")
+    @ResponseBody
+    public String logout(HttpServletRequest request, HttpSession session)
+    {
+        Map<String, String> parameter = new HashMap<>();
+        String sessionType = request.getParameter("sessionType");
+        switch (sessionType)
+        {
+            case "patient":
+                request.getSession().removeAttribute("patientInfo");
+                break;
+            case "doctor":
+                request.getSession().removeAttribute("doctorInfo");
+                break;
+            case "admin":
+                request.getSession().removeAttribute("adminInfo");
+                break;
+            default:
+                break;
+        }
+        parameter.put("status", "ok");
+        System.out.println("完成");
+        return JSON.toJSONString(parameter);
     }
 }

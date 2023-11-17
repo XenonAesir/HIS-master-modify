@@ -21,10 +21,9 @@ public class RemeberLoginIntercepter implements HandlerInterceptor {
         Object patientSession = session.getAttribute("patientInfo");//查找患者session
         Object adminSession = session.getAttribute("adminInfo");//查找员工session
         Object doctorSession = session.getAttribute("doctorInfo");//查找员工session
-        Object pharmacistSession = session.getAttribute("pharmacistInfo");//查找员工session
 
 
-        // if(null==patientSession && null==adminSession && null==doctorSession && null==pharmacistSession){
+        // if(null==patientSession && null==adminSession && null==doctorSession){
         //     response.sendRedirect(request.getContextPath()+"/login.html");
         //     return false;
         // }

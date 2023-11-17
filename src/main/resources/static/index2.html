@@ -124,14 +124,29 @@
 							<div class="get-quote" style="float: right; margin-top: 10px; display: none"
 								id="loggedin-btn">
 								<a href="my.html" class="btn">预约记录</a>
+
+
 							</div>
-							<div class="get-quote" style="float: right; margin-top: 20px; margin-right: 20px">
+
+							<!-- 退出按钮 -->
+							<div class="get-quote"
+								style="float: right; margin-top: 10px; margin-right: 10px; display: block;"
+								id="exit-btn" style="display: none;">
+								<span id="exit"></span>
+							</div>
+							<!-- 个人信息 -->
+							<div class="get-quote" style="float: right; margin-top: 20px; margin-right: 20px"
+								style="display: none;">
 								<p id="name"></p>
 							</div>
+
+
+
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 		<!--/ End Header Inner -->
 	</header>
@@ -162,40 +177,6 @@
 	</section>
 	<!--/ End Slider Area -->
 
-	<!-- Footer Area -->
-	<!--<footer id="footer" class="footer ">
-	&lt;!&ndash; Copyright &ndash;&gt;
-	<div class="copyright">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-12">
-					<div class="copyright-content">
-						<p>Copyright &copy; 2020.Company name All rights reserved.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	&lt;!&ndash;/ End Copyright &ndash;&gt;
-</footer>-->
-	<!--/ End Footer Area -->
-
-
-	<script type="text/javascript">
-		window.onload = function () {
-			if (sessionStorage.getItem("patientID") != null) {
-				$('#loggedin-btn').css('display', 'block')
-				$('#no-login-btn').css('display', 'none')
-				document.getElementById("name").innerText = "欢迎您：" + sessionStorage.getItem("patientID");
-			}
-			else {
-				$('#loggedin-btn').css('display', 'none')
-				$('#no-login-btn').css('display', 'block')
-				document.getElementById("name").innerText = ''
-			}
-		}
-
-	</script>
 	<!-- jquery Min JS -->
 	<script src="js/jquery.min.js"></script>
 	<!-- jquery Migrate JS -->
@@ -236,6 +217,81 @@
 	<script src="js/bootstrap.min.js"></script>
 	<!-- Main JS -->
 	<script src="js/main.js"></script>
+
+	<script type="text/javascript">
+
+		window.onload = function () {
+			if (sessionStorage.getItem("patientID") != null) {
+				$('#loggedin-btn').css('display', 'block');
+				$('#no-login-btn').css('display', 'none');
+				document.getElementById("name").innerText = "欢迎您：" + sessionStorage.getItem("patientID");
+
+				// 显示退出按钮
+				$('#exit-btn').css('display', 'block');
+				document.getElementById("exit").innerHTML = "<a href='index2.html' class='btn' id='exit'>退出</a>";
+			} else {
+				$('#loggedin-btn').css('display', 'none');
+				$('#no-login-btn').css('display', 'block');
+				document.getElementById("name").innerText = '';
+
+				// 隐藏退出按钮
+				$('#exit-btn').css('display', 'none');
+				document.getElementById("exit").innerHTML = "";
+			}
+		};
+
+		$('#exit').click(function () {
+			// 在点击退出按钮时进行清除操作
+			console.log("退出登录")
+
+			$.ajax({
+				url: "/exit",
+				type: "GET",
+				data: {
+					"sessionType": "patient",
+				},
+				dataType: "json",
+				async: true,
+				success: function (data) {
+
+					localStorage.removeItem('patient_token');
+					sessionStorage.removeItem('patientID');
+					$('#loggedin-btn').css('display', 'none');
+					$('#no-login-btn').css('display', 'block');
+					document.getElementById("name").innerText = '';
+
+					// 隐藏退出按钮
+					$('#exit-btn').css('display', 'none');
+					document.getElementById("exit").innerHTML = "";
+
+					if (data.status == "ok") {
+						alert("退出成功")
+						sessionStorage.removeItem("tempID")
+						window.location.href = "login.html";
+					} else if (data.status == "inexistence") {
+						alert("用户不存在,请注册。")
+					} else if (data.status == "informationCheckFail") {
+						alert("您输入的信息有误！")
+					}
+				},
+				error: function (res) {
+					alert("请求错误！", console.res)
+				}
+			});
+
+
+		});
+
+		$('a[href="appointment-doc.html"], a[href="appointment-dept.html"]').click(function (e) {
+			if (sessionStorage.getItem("patientID") === null) {
+				e.preventDefault();
+				alert("请先登录");
+			}
+		});
+
+
+	</script>
+
 </body>
 
 </html>

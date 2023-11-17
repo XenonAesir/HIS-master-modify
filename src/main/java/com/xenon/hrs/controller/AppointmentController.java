@@ -49,7 +49,7 @@ public class AppointmentController
     }
 
 
-    //预约专家,前端返回选择的doctorId,departmentId -->返回近七天该医生的预约剩余名额信息
+    //预约门诊
     @RequestMapping("/appoint_dept2")
     @ResponseBody
     public void appointDept2(HttpServletRequest request, HttpServletResponse response) throws ParseException
@@ -88,9 +88,25 @@ public class AppointmentController
             System.out.println("预约失败，在黑名单！");
             return JSON.toJSONString(parameter);
         }
+
         String departmentId = request.getParameter("departmentId");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date reserveTime = sdf.parse(request.getParameter("reserveTime"));
+
+        //判断是否本次预约时间段已有预约记录
+        List<ReserveHistoryDto> reserveTableList = appointmentService.getReserveHistoryByPatientId(patient.getPatientIdentity());
+        for (ReserveHistoryDto reserve : reserveTableList)
+        {
+            if (reserve.getReserveTime().equals(reserveTime))
+            {
+                parameter.put("status", "fail3");
+                parameter.put("msg", "您已预约预约过该时间段的号，请仔细查看！");
+                System.out.println("您已预约预约过该时间段的号，请仔细查看！");
+                return JSON.toJSONString(parameter);
+            }
+        }
+
+
         ReserveTable reserveTable = new ReserveTable();
         reserveTable.setPatientIdentity(patient.getPatientIdentity());
         reserveTable.setReserveTime(reserveTime);
@@ -150,7 +166,7 @@ public class AppointmentController
     }
 
 
-    //预约专家,前端返回选择的doctorId,departmentId -->返回近七天该医生的预约剩余名额信息
+    //预约专家
     @RequestMapping("/appoint_doctor2")
     @ResponseBody
     public void appointDoctor2(HttpServletRequest request, HttpServletResponse response) throws ParseException
@@ -193,6 +209,20 @@ public class AppointmentController
         String departmentId = request.getParameter("departmentId");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date reserveTime = sdf.parse(request.getParameter("reserveTime"));
+
+        //判断是否本次预约时间段已有预约记录
+        List<ReserveHistoryDto> reserveTableList = appointmentService.getReserveHistoryByPatientId(patient.getPatientIdentity());
+        for (ReserveHistoryDto reserve : reserveTableList)
+        {
+            if (reserve.getReserveTime().equals(reserveTime))
+            {
+                parameter.put("status", "fail3");
+                parameter.put("msg", "您已预约预约过该时间段的号，请仔细查看！");
+                System.out.println("您已预约预约过该时间段的号，请仔细查看！");
+                return JSON.toJSONString(parameter);
+            }
+        }
+
         ReserveTable reserveTable = new ReserveTable();
         reserveTable.setPatientIdentity(patient.getPatientIdentity());
         reserveTable.setReserveTime(reserveTime);
@@ -288,6 +318,73 @@ public class AppointmentController
         return JSON.toJSONString(parameter);
     }
 
+    @RequestMapping("/appoint_init")
+    //一次性新增预约名额-->数据库初始化
+    public void addRemainNumber(HttpServletRequest request, HttpServletResponse response) throws ParseException
+    {
+        System.out.println("addRemainNumber():");
+        response.setContentType("text/html; charset=utf-8");
+
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        int dayOfStart = Integer.parseInt(request.getParameter("dayOfStart"));
+        int dayOfEnd = Integer.parseInt(request.getParameter("dayOfEnd"));
+        String doctorIdBanString = request.getParameter("doctorIdBanString");
+
+        // 使用逗号分隔符将医生ID合并为一个字符串
+        String[] doctorIdBanArray = doctorIdBanString.split(",");
+
+        // 将医生ID保存在一个集合中
+        List<String> doctorIdBanList = Arrays.asList(doctorIdBanArray);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (int day = dayOfStart; day <= dayOfEnd; day++)
+        {
+            for (int i = 9; i < 17; i++)
+            {
+                String day_string;
+                if (i < 10)
+                {
+                    day_string = year + "-" + month + "-" + String.valueOf(day) + " 0" + String.valueOf(i) + ":00:00";
+                }
+                else
+                {
+                    day_string = year + "-" + month + "-" + String.valueOf(day) + " " + String.valueOf(i) + ":00:00";
+                }
+                Date date = format.parse(day_string);
+                // System.out.println(date);
+
+                RemainDeptNumber remainDeptNumber = new RemainDeptNumber();
+                List<Department> departments = appointmentService.getAllDepartment();
+                for (Department dept : departments)
+                {
+                    System.out.println(dept.getDepartmentId());
+                    remainDeptNumber.setDepartmentId(dept.getDepartmentId());
+                    remainDeptNumber.setTime(date);
+                    remainDeptNumber.setNumber(20);
+                    System.out.println("添加到门诊挂号：" + appointmentService.addRemainDeptNumber(remainDeptNumber));
+
+                }
+
+
+                RemainDoctorNumber remainDoctorNumber = new RemainDoctorNumber();
+                List<Doctor> doctors = appointmentService.getAllDoctor();
+                for (Doctor doctor : doctors)
+                {
+                    // 排除名单中的医生
+                    if (doctorIdBanList.contains(doctor.getDoctorId()))
+                        continue;
+                    System.out.println(doctor.getDoctorName());
+                    remainDoctorNumber.setDoctorId(doctor.getDoctorId());
+                    remainDoctorNumber.setTime(date);
+                    remainDoctorNumber.setNumber(5);
+                    System.out.println("添加到专家挂号：" + appointmentService.addremainDoctorNumber(remainDoctorNumber));
+
+                }
+            }
+        }
+    }
+
     // //管理人员取消预约
     // @RequestMapping("/appoint_cancel_staff")
     // @ResponseBody
@@ -355,72 +452,4 @@ public class AppointmentController
     //         }
     //     }
     // }
-
-
-    @RequestMapping("/appoint_init")
-    //一次性新增预约名额-->数据库初始化
-    public void addRemainNumber(HttpServletRequest request, HttpServletResponse response) throws ParseException
-    {
-        System.out.println("addRemainNumber():");
-        response.setContentType("text/html; charset=utf-8");
-
-        String year = request.getParameter("year");
-        String month = request.getParameter("month");
-        int dayOfStart = Integer.parseInt(request.getParameter("dayOfStart"));
-        int dayOfEnd = Integer.parseInt(request.getParameter("dayOfEnd"));
-        String doctorIdBanString = request.getParameter("doctorIdBanString");
-
-        // 使用逗号分隔符将医生ID合并为一个字符串
-        String[] doctorIdBanArray = doctorIdBanString.split(",");
-
-        // 将医生ID保存在一个集合中
-        List<String> doctorIdBanList = Arrays.asList(doctorIdBanArray);
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (int day = dayOfStart; day <= dayOfEnd; day++)
-        {
-            for (int i = 9; i < 17; i++)
-            {
-                String day_string;
-                if (i < 10)
-                {
-                    day_string = year + "-" + month + "-" + String.valueOf(day) + " 0" + String.valueOf(i) + ":00:00";
-                }
-                else
-                {
-                    day_string = year + "-" + month + "-" + String.valueOf(day) + " " + String.valueOf(i) + ":00:00";
-                }
-                Date date = format.parse(day_string);
-                // System.out.println(date);
-
-                RemainDeptNumber remainDeptNumber = new RemainDeptNumber();
-                List<Department> departments = appointmentService.getAllDepartment();
-                for (Department dept : departments)
-                {
-                    System.out.println(dept.getDepartmentId());
-                    remainDeptNumber.setDepartmentId(dept.getDepartmentId());
-                    remainDeptNumber.setTime(date);
-                    remainDeptNumber.setNumber(20);
-                    System.out.println("添加到门诊挂号：" + appointmentService.addRemainDeptNumber(remainDeptNumber));
-
-                }
-
-
-                RemainDoctorNumber remainDoctorNumber = new RemainDoctorNumber();
-                List<Doctor> doctors = appointmentService.getAllDoctor();
-                for (Doctor doctor : doctors)
-                {
-                    // 排除名单中的医生
-                    if (doctorIdBanList.contains(doctor.getDoctorId()))
-                        continue;
-                    System.out.println(doctor.getDoctorName());
-                    remainDoctorNumber.setDoctorId(doctor.getDoctorId());
-                    remainDoctorNumber.setTime(date);
-                    remainDoctorNumber.setNumber(5);
-                    System.out.println("添加到专家挂号：" + appointmentService.addremainDoctorNumber(remainDoctorNumber));
-
-                }
-            }
-        }
-    }
 }

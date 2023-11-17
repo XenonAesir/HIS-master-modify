@@ -2,12 +2,12 @@ package com.xenon.hrs.service.impl;
 
 import com.xenon.hrs.generate.PatientDao;
 import com.xenon.hrs.models.Patient;
-import com.xenon.hrs.service.RegisterService;
+import com.xenon.hrs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegisterServiceImpl implements RegisterService
+public class UserServiceImpl implements UserService
 {
     @Autowired
     PatientDao patientDao;
