@@ -195,6 +195,7 @@
         WHERE reserve_tables.doctor_id = #{doctorId,jdbcType=VARCHAR}
           AND reserve_tables.patient_identity = patients.patient_identity
           AND reserve_tables.doctor_id = doctors.doctor_id
+          AND reserve_tables.reserve_state = 0
           #七天内的预约
           and <![CDATA[ DATEDIFF(date(reserve_time),CURDATE()) <8 and DATEDIFF(date(reserve_time),CURDATE()) >=1  ]]>
     </select>
