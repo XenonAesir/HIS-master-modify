@@ -28,6 +28,8 @@
         select *
         from remain_dept_numbers
         where department_id = #{DeptId,jdbcType=VARCHAR}
+        #七天内的预约
+        and <![CDATA[ DATEDIFF(date(time),CURDATE()) <8 and DATEDIFF(date(time),CURDATE()) >=1  ]]>
     </select>
     <select id="getAllToday" resultType="com.xenon.hrs.models.RemainDeptNumber" resultMap="BaseResultMap">
         select *

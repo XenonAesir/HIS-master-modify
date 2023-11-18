@@ -91,10 +91,6 @@
                                 <div class="get-quote" style="float: right;">
                                     <a href="index2.html" class="btn">退出</a>
                                 </div>
-                                <div class="get-quote" style="float: right; padding-right: 30px;"
-                                    onclick="nextPatient()">
-                                    <a href="#" class="btn">诊毕</a>
-                                </div>
                             </div>
                             <!--/ End Single Widget -->
                         </div>
@@ -108,18 +104,6 @@
 
     <!-- Start portfolio -->
     <section class="portfolio section" style="padding-top: 20px; height: 60%; width: 100%; ">
-        <!-- Start patient info -->
-        <div class="patient-info" id="patient-infoo" data-id="0">
-            <p>
-            <h5 class="patient-info-h">当前病人</h5>
-            <h5 class="patient-info-h" id="patient-name" data-id="aaa">姓名：呃呃呃</h5>
-            <h5 class="patient-info-h" id="register-number">就诊号：13</h5>
-            <h5 class="patient-info-h" id="patient-gender">性别：男</h5>
-            <h5 class="patient-info-h" id="patient-age">年龄：27</h5>
-            </p>
-
-        </div>
-        <!-- End patient info -->
 
         <!-- Start function: records, checkups, prescriptions -->
         <header class="header style2">
@@ -132,12 +116,9 @@
                                 <div class="main-menu" style="float: left;">
                                     <nav class="navigation">
                                         <ul class="nav menu">
-                                            <li class="active" id="records"><a href="#" onclick="showRecords()">新建病历</a>
+                                            <li class="active" id="records"><a href="#" onclick="showRecords()">近期出诊</a>
                                             </li>
-                                            <li id="checkups"><a href="#" onclick="showCheckups()">检验申请</a></li>
-                                            <li id="prescriptions"><a href="#" onclick="showPrescriptions()">处方单</a>
-                                            </li>
-                                            <li id="history"><a href="#" onclick="showHistory()">历史病历</a></li>
+                                            <li id="checkups"><a href="#" onclick="showCheckups()">停诊申请</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -150,154 +131,49 @@
         </header>
         <!-- End function: records, checkups, prescriptions -->
 
-        <!-- Start records -->
-        <div class="func-option doc-records" id="doc-records" style="display: block;">
-            <div style="width: 70%; padding-left: 20px; float: left;">
+        <div class="container">
+            <!-- Start records -->
+            <div class="func-option doc-records" id="doc-records" style="display: block;">
 
-                <p class="doc-records-sympton">
-                <h6 class="doc-records-item">症状描述</h6><textarea id="record-symptom"
-                    class="doc-records-input"></textarea>
-                </p>
 
-                <p class="doc-records-result">
-                <h6 class="doc-records-item">诊断结果</h6><textarea id="record-result" class="doc-records-input"></textarea>
-                </p>
-
-                <div class="doc-records-btngroup"><button class="btn" onclick="submitRecord()">暂存</button>
-                    <button class="btn" style="margin-left: 50px;">打印</button>
+                <div id="appointmentTableContainer">
+                    <!-- 表格将显示在这个容器中 -->
                 </div>
 
+                <!-- 病历模板选择 -->
+                <!-- <div class="doc-records-format">
+                    </div> -->
             </div>
+            <!-- End records -->
 
-            <!-- 病历模板选择 -->
-            <!-- <div class="doc-records-format">
-            </div> -->
-        </div>
-        <!-- End records -->
+            <!-- Start checkups -->
+            <div class="func-option doc-checkups" id="doc-checkups" style="display: none;">
+                <div style=" padding-left: 20px; float: left;">
+                    <p class="doc-checkups-result">
+                    <h6 class="doc-records-item">临床诊断</h6><textarea class="doc-records-input" id="check_des"></textarea>
+                    </p>
 
-        <!-- Start checkups -->
-        <div class="func-option doc-checkups" id="doc-checkups" style="display: none;">
-            <div style=" padding-left: 20px; float: left;">
-                <p class="doc-checkups-result">
-                <h6 class="doc-records-item">临床诊断</h6><textarea class="doc-records-input" id="check_des"></textarea>
-                </p>
+                    <p class="doc-checkups-type">
+                    <h6 class="doc-records-item doc-checkups-item">检查项目</h6>
+                    <select class="doc-checkups-input" id="checkup-item">
+                        <option>心电图</option>
+                        <option>颅脑平扫</option>
+                        <option>胸部平扫</option>
+                        <option>胸部正侧位片</option>
+                        <option>胸腰段正侧位</option>
+                    </select>
+                    </p>
 
-                <p class="doc-checkups-type">
-                <h6 class="doc-records-item doc-checkups-item">检查项目</h6>
-                <select class="doc-checkups-input" id="checkup-item">
-                    <option>心电图</option>
-                    <option>颅脑平扫</option>
-                    <option>胸部平扫</option>
-                    <option>胸部正侧位片</option>
-                    <option>胸腰段正侧位</option>
-                </select>
-                </p>
+                    <div class="doc-records-btngroup" style="margin-top: 100px;"><button class="btn"
+                            onclick="submitCheckup()">暂存</button>
+                        <button class="btn" style="margin-left: 50px;">打印</button>
+                    </div>
 
-                <div class="doc-records-btngroup" style="margin-top: 100px;"><button class="btn"
-                        onclick="submitCheckup()">暂存</button>
-                    <button class="btn" style="margin-left: 50px;">打印</button>
                 </div>
-
             </div>
+            <!-- End checkups -->
         </div>
-        <!-- End checkups -->
 
-        <!-- Start prescriptions -->
-        <div class="func-option doc-prescriptions" id="doc-prescriptions" style="display: none;">
-            <div class="doc-records-btngroup" style="margin-top: 20px; margin-bottom: 20px; margin-left: 600px;"><button
-                    class="btn" onclick="submitPrescription()">暂存</button>
-                <button class="btn" style="margin-left: 50px;">打印</button>
-            </div>
-            <div class="doc-prescriptions-list">
-                <table class="table doc-table" style="margin-bottom: 0; height: auto;">
-                    <colgroup>
-                        <col style="width: 15%;" />
-                        <col style="width: 40%;" />
-                        <col style="width: 20%;" />
-                        <col style="width: 15%;" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>药品编号</th>
-                            <th>药品名</th>
-                            <th>用量</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="meds-list">
-                        <tr>
-                            <td>xxxxxxxxxxxxxxxx</td>
-                            <td>莫欣克拉霉素缓释片</td>
-                            <td class="doc-table-editable" contenteditable="">1</td>
-                            <td>
-                                <button class="btn doc-table-btn" onclick="deleteMed(this)">删除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>xxxxxxxxxxxxxxxx</td>
-                            <td>莫欣克拉霉素缓释片</td>
-                            <td class="doc-table-editable" contenteditable="">1</td>
-                            <td>
-                                <button class="btn doc-table-btn" onclick="deleteMed(this)">删除</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table doc-table">
-                    <colgroup>
-                        <col style="width: 15%;" />
-                        <col style="width: 40%;" />
-                        <col style="width: 20%;" />
-                        <col style="width: 15%;" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td class="doc-table-inputgrid"><input class="doc-table-input" id="meds-name" />
-                                <a href="#" onclick="searchMed()"><i class="icofont-search-1"></i></a>
-                                <div id="meds-drawer" data-id="023">
-                                    <span id="searched-meds-name">扑热息痛</span>剩余：<span id="searched-meds-number">5</span>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td>
-                                <!-- <button class="btn doc-table-btn">删除</button> -->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <!-- End prescriptions -->
-
-        <!-- Start history -->
-        <div class="func-option doc-history" id="doc-history" style="display: none;">
-            <div class="doc-history-list">
-                <table class="table doc-table">
-                    <thead>
-                        <tr>
-                            <th>病历编号</th>
-                            <th>就诊时间</th>
-                            <th>主治医生</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-list">
-                        <tr>
-                            <td>xxxxxxxxxxx</td>
-                            <td>2020-11-11 09:00</td>
-                            <td>内科-啊啊啊</td>
-                            <td><button class="btn doc-table-btn" onclick="getDetail(this)">查看</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="doc-history-detail">
-                <h1 class="history-empty">病历详情</h1>
-                <textarea class="history-detail-text" disabled></textarea>
-            </div>
-        </div>
-        <!-- End history -->
 
     </section>
     <!--/ End portfolio -->
@@ -345,6 +221,31 @@
     <script src="js/main.js"></script>
 
     <style type="text/css">
+        /* 定义指针类样式 */
+        .pointer {
+            cursor: pointer;
+            /* 使用 pointer 属性将鼠标指针样式设置为手型，表示可点击 */
+        }
+
+        /* 添加CSS样式来美化表格 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+
+
         #meds-drawer {
             margin-top: 10px;
             text-align: right;
@@ -374,12 +275,6 @@
 
         .func-option {
             height: 60%;
-        }
-
-        .doc-records,
-        .doc-checkups {
-            padding-left: 30px;
-            padding-right: 30px;
         }
 
         .doc-records-item {
@@ -504,6 +399,99 @@
     </style>
 
     <script>
+        // 在页面加载时执行
+        window.onload = function () {
+
+            // 找到 ID 为 "doctor-id" 的元素，并将其内容设置为 doctorId
+            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');;
+        };
+
+        $(document).ready(function () {
+            // 获取医生ID，假设已经存储在sessionStorage中
+            const doctorId = sessionStorage.getItem('doctorId');
+
+            // 使用AJAX请求从后端获取数据
+            $.ajax({
+                url: '/getDoctorAppointments',
+                method: 'POST',
+                data: { doctorId: doctorId },
+                success: function (response) {
+                    // 如果成功获取到数据
+                    if (response && response.length > 0) {
+                        // 创建表格并添加表头
+                        let table = '<table><thead><tr>' +
+                            '<th data-index="0">预约单号</th>' +
+                            '<th data-index="1">预约时间</th>' +
+                            '<th data-index="2">患者姓名</th>' +
+                            '<th data-index="3">患者性别</th>' +
+                            '<th data-index="4">患者电话</th>' +
+                            '</tr></thead><tbody>';
+
+                        // 遍历预约数据并添加到表格中
+                        response.forEach(ReserveInfoDto => {
+                            const genderText = ReserveInfoDto.patientGender === 1 ? '男' : '女';
+                            table += `<tr><td>${ReserveInfoDto.reserveId}</td><td>${ReserveInfoDto.reserveTime}</td><td>${ReserveInfoDto.patientName}</td><td>${genderText}</td><td>${ReserveInfoDto.patientTel}</td></tr>`;
+                        });
+
+                        table += '</tbody></table>';
+
+                        // 将表格添加到页面中的指定容器中
+                        $('#appointmentTableContainer').html(table);
+
+                        // 给表头th绑定点击事件
+                        $('th').click(function () {
+                            const index = $(this).data('index');
+                            sortTable(index);
+                        });
+
+                        // 给表头th绑定鼠标悬停事件
+                        $('th').hover(function () {
+                            $(this).addClass('pointer');
+                        }, function () {
+                            $(this).removeClass('pointer');
+                        });
+                    } else {
+                        // 如果没有获取到数据，显示相应信息或执行其他操作
+                        $('#appointmentTableContainer').html('<p>没有预约数据</p>');
+                    }
+                },
+                error: function (error) {
+                    // 如果请求出现错误，显示错误信息或执行其他操作
+                    $('#appointmentTableContainer').html('<p>请求数据时出错</p>');
+                    console.error('请求预约数据时出错', error);
+                }
+            });
+        });
+
+        let ascendingOrder = true;
+
+        function sortTable(columnIndex) {
+            const table = document.querySelector('table');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+            rows.sort((a, b) => {
+                let cellA = a.querySelectorAll('td')[columnIndex].textContent.trim();
+                let cellB = b.querySelectorAll('td')[columnIndex].textContent.trim();
+
+                // Convert cell content to appropriate types for sorting
+                cellA = isNaN(cellA) ? cellA.toUpperCase() : parseFloat(cellA);
+                cellB = isNaN(cellB) ? cellB.toUpperCase() : parseFloat(cellB);
+
+                if (cellA < cellB) return ascendingOrder ? -1 : 1;
+                if (cellA > cellB) return ascendingOrder ? 1 : -1;
+                return 0;
+            });
+
+            // Reverse order for next click
+            ascendingOrder = !ascendingOrder;
+
+            // Rearrange rows based on sorting
+            rows.forEach(row => table.querySelector('tbody').appendChild(row));
+        }
+
+    </script>
+
+    <script>
         function showRecords() {
             if ($("records").hasClass('active')) return;
 
@@ -530,38 +518,6 @@
             $("#doc-checkups").css('display', 'block')
             $("#doc-prescriptions").css('display', 'none')
             $("#doc-history").css('display', 'none')
-        }
-
-        function showPrescriptions() {
-            if ($("#prescriptions").hasClass('active')) return;
-
-            $("#prescriptions").addClass('active')
-            if ($("#records").hasClass('active')) $("#records").removeClass('active')
-            if ($("#checkups").hasClass('active')) $("#checkups").removeClass('active')
-            if ($("#history").hasClass('active')) $("#history").removeClass('active')
-
-            $("#doc-records").css('display', 'none')
-            $("#doc-checkups").css('display', 'none')
-            $("#doc-prescriptions").css('display', 'block')
-            $("#doc-history").css('display', 'none')
-
-            $('#meds-list').html('')
-        }
-
-        function showHistory() {
-            if ($("#history").hasClass('active')) return;
-
-            $("#history").addClass('active')
-            if ($("#checkups").hasClass('active')) $("#checkups").removeClass('active')
-            if ($("#records").hasClass('active')) $("#records").removeClass('active')
-            if ($("#prescriptions").hasClass('active')) $("#prescriptions").removeClass('active')
-
-            $("#doc-records").css('display', 'none')
-            $("#doc-checkups").css('display', 'none')
-            $("#doc-prescriptions").css('display', 'none')
-            $("#doc-history").css('display', 'block')
-
-            getHistory()
         }
     </script>
 

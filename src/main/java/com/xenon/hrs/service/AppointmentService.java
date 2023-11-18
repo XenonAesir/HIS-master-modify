@@ -7,16 +7,22 @@ import com.xenon.hrs.models.*;
 
 import java.util.List;
 
-public interface AppointmentService {
+public interface AppointmentService
+{
     List<RemainDeptNumber> getAllRemainDeptNumber();
 
     List<RemainDoctorDto> getAllDoctorRemain();
+
     int addReserveTable(ReserveTable reserveTable);
+
     int getBlackFlag(Patient patient);
+
     int updateRemainDeptNumber(RemainDeptNumber remainDeptNumber);
-    List<RemainDeptNumber> getRemainDeptNumberByDeptId( String DeptId);
+
+    List<RemainDeptNumber> getRemainDeptNumberByDeptId(String DeptId);
 
     int addRemainDeptNumber(RemainDeptNumber remainDeptNumber);
+
     List<Department> getAllDepartment();
 
     List<Doctor> getAllDoctor();

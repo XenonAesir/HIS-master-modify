@@ -1,5 +1,6 @@
 package com.xenon.hrs.generate;
 
+import com.xenon.hrs.DTO.ReserveInfoDto;
 import com.xenon.hrs.models.ReserveTable;
 import com.xenon.hrs.DTO.ReserveHistoryDto;
 import com.xenon.hrs.DTO.ReserveTableDto;
@@ -26,5 +27,7 @@ public interface ReserveTableDao {
     List<ReserveHistoryDto> selectHistoryByPatientId(String patientIdentity);
 
     List<ReserveTableDto> selectInfoByPIdToday(String patientIdentity);
+
+    List<ReserveInfoDto> selectInfoByDoctorIdThisWeek(String doctorId);
 }
 

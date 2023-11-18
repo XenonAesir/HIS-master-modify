@@ -155,6 +155,14 @@
         <result column="reserve_time" jdbcType="TIMESTAMP" property="reserveTime"/>
     </resultMap>
 
+    <resultMap id="ResultMap3" type="com.xenon.hrs.DTO.ReserveInfoDto">
+        <id column="reserve_id" jdbcType="INTEGER" property="reserveId"/>
+        <result column="patient_gender" jdbcType="INTEGER" property="patientGender"/>
+        <result column="patient_name" jdbcType="VARCHAR" property="patientName"/>
+        <result column="patient_tel" jdbcType="VARCHAR" property="patientTel"/>
+        <result column="reserve_time" jdbcType="TIMESTAMP" property="reserveTime"/>
+    </resultMap>
+
     <select id="selectInfoByPIdToday" resultType="com.xenon.hrs.DTO.ReserveTableDto" resultMap="ResultMap2">
         select reserve_tables.reserve_id,
                reserve_tables.patient_identity,
@@ -174,4 +182,22 @@
         ]]>
 
     </select>
+
+    <select id="selectInfoByDoctorIdThisWeek" resultType="com.xenon.hrs.DTO.ReserveInfoDto" resultMap="ResultMap3">
+        SELECT reserve_tables.reserve_id,
+               patients.patient_gender,
+               patients.patient_name,
+               patients.patient_tel,
+               reserve_tables.reserve_time
+        FROM reserve_tables,
+             doctors,
+             patients
+        WHERE reserve_tables.doctor_id = #{doctorId,jdbcType=VARCHAR}
+          AND reserve_tables.patient_identity = patients.patient_identity
+          AND reserve_tables.doctor_id = doctors.doctor_id
+          #七天内的预约
+          and <![CDATA[ DATEDIFF(date(reserve_time),CURDATE()) <8 and DATEDIFF(date(reserve_time),CURDATE()) >=1  ]]>
+    </select>
+
+
 </mapper>

@@ -71,7 +71,8 @@
         FROM doctors,remain_doctor_numbers
         where doctors.doctor_id=#{doctorId,jdbcType=VARCHAR} and doctors.doctor_id=remain_doctor_numbers.doctor_id
         and doctors.doctor_id!='DOC0001'
-        <!--   时间约束   and <![CDATA[ DATEDIFF(date(time),CURDATE()) <8 and DATEDIFF(date(time),CURDATE()) >=1  ]]>-->
+        #七天内的预约
+        and <![CDATA[ DATEDIFF(date(time),CURDATE()) <8 and DATEDIFF(date(time),CURDATE()) >=1  ]]>
     </select>
     <select id="getAllDoctorRemainToday" resultType="com.xenon.hrs.DTO.RemainDoctorDto" resultMap="resultMap1">
         SELECT remain_doctor_number_id, doctors.doctor_id, time, number, doctors.doctor_name, doctors.department_id
