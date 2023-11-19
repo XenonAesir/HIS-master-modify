@@ -150,18 +150,14 @@
             <div class="func-option doc-checkups" id="doc-checkups" style="display: none;">
                 <div style=" padding-left: 20px; float: left;">
                     <p class="doc-checkups-result">
-                    <h6 class="doc-records-item">临床诊断</h6><textarea class="doc-records-input" id="check_des"></textarea>
+                    <h6 class="doc-records-item">请假缘由</h6><textarea class="doc-records-input" id="check_des"></textarea>
                     </p>
 
                     <p class="doc-checkups-type">
-                    <h6 class="doc-records-item doc-checkups-item">检查项目</h6>
-                    <select class="doc-checkups-input" id="checkup-item">
-                        <option>心电图</option>
-                        <option>颅脑平扫</option>
-                        <option>胸部平扫</option>
-                        <option>胸部正侧位片</option>
-                        <option>胸腰段正侧位</option>
-                    </select>
+                    <h6 class="doc-records-item doc-checkups-item">日期选择</h6>
+
+                    <input type="text" class="form-control" id="dateInput">
+
                     </p>
 
                     <div class="doc-records-btngroup" style="margin-top: 100px;"><button class="btn"
@@ -193,6 +189,7 @@
     <script src="js/popper.min.js"></script>
     <!-- Bootstrap Datepicker JS -->
     <script src="js/bootstrap-datepicker.js"></script>
+    <script src="locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <!-- Jquery Nav JS -->
     <script src="js/jquery.nav.js"></script>
     <!-- Slicknav JS -->
@@ -398,6 +395,8 @@
         }
     </style>
 
+
+
     <script>
         // 在页面加载时执行
         window.onload = function () {
@@ -489,6 +488,12 @@
             rows.forEach(row => table.querySelector('tbody').appendChild(row));
         }
 
+    </script>
+
+    <script>
+        $('#dateInput').datepicker({
+            language: "zh-CN"
+        });
     </script>
 
     <script>
