@@ -1,25 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xenon.hrs.generate.VacateDao">
-    <insert id="insert" keyColumn="vacate_id" keyProperty="vacateId" parameterType="com.xenon.hrs.models.Vacate" useGeneratedKeys="true">
-        INSERT INTO vacates (doctor_id, description, apply_date, vacate_date, status, admin_id, admin_date)
+    <resultMap id="BaseResultMap" type="com.xenon.hrs.models.Vacate">
+        <id column="vacate_id" property="vacateId" jdbcType="INTEGER"/>
+        <result column="doctor_id" property="doctorId" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP"/>
+        <result column="vacate_date" property="vacateDate" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="admin_id" property="adminId" jdbcType="VARCHAR"/>
+        <result column="admin_date" property="adminDate" jdbcType="TIMESTAMP"/>
+        <result column="admin_opinion" property="adminOpinion" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        vacate_id, doctor_id, description, apply_date, vacate_date, status,
+    admin_id, admin_date, admin_opinion
+    </sql>
+    <insert id="insert" keyColumn="vacate_id" keyProperty="vacateId" parameterType="com.xenon.hrs.models.Vacate"
+            useGeneratedKeys="true">
+        INSERT INTO vacates (doctor_id, description, apply_date, vacate_date, status, admin_id, admin_date, admin_opinion)
         VALUES (#{doctorId, jdbcType=VARCHAR}, #{description, jdbcType=VARCHAR}, #{applyDate, jdbcType=TIMESTAMP},
-                #{vacateDate, jdbcType=TIMESTAMP}, #{status, jdbcType=INTEGER}, #{adminId, jdbcType=VARCHAR}, #{adminDate, jdbcType=TIMESTAMP})
+                #{vacateDate, jdbcType=TIMESTAMP}, #{status, jdbcType=INTEGER}, #{adminId, jdbcType=VARCHAR},
+                #{adminDate, jdbcType=TIMESTAMP}, #{adminOpinion, jdbcType=VARCHAR})
     </insert>
     <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Vacate">
         UPDATE vacates
-        SET doctor_id = #{doctorId, jdbcType=VARCHAR}, description = #{description, jdbcType=VARCHAR},
-            apply_date = #{applyDate, jdbcType=TIMESTAMP}, vacate_date = #{vacateDate, jdbcType=TIMESTAMP},
-            status = #{status, jdbcType=INTEGER}, admin_id = #{adminId, jdbcType=VARCHAR}, admin_date = #{adminDate, jdbcType=TIMESTAMP}
+        SET doctor_id   = #{doctorId, jdbcType=VARCHAR},
+            description = #{description, jdbcType=VARCHAR},
+            apply_date  = #{applyDate, jdbcType=TIMESTAMP},
+            vacate_date = #{vacateDate, jdbcType=TIMESTAMP},
+            status      = #{status, jdbcType=INTEGER},
+            admin_id    = #{adminId, jdbcType=VARCHAR},
+            admin_date  = #{adminDate, jdbcType=TIMESTAMP},
+            admin_opinion = #{adminOpinion,jdbcType=VARCHAR}
         WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
     </update>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-        DELETE FROM vacates
-        WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
-    </delete>
-    <select id="selectByPrimaryKey" resultType="com.xenon.hrs.models.Vacate" parameterType="java.lang.Integer">
-        SELECT *
+        DELETE
         FROM vacates
         WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
+    </delete>
+    <select id="selectByPrimaryKey" resultType="com.xenon.hrs.models.Vacate" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM vacates
+        WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
+    </select>
+    <select id="selectByDoctorId" resultType="com.xenon.hrs.models.Vacate" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM vacates
+        WHERE doctor_id = #{doctorId, jdbcType=VARCHAR}
     </select>
 </mapper>

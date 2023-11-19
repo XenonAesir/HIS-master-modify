@@ -119,6 +119,7 @@
                                             <li class="active" id="records"><a href="#" onclick="showRecords()">近期出诊</a>
                                             </li>
                                             <li id="checkups"><a href="#" onclick="showCheckups()">临时短假</a></li>
+                                            <li id="history"><a href="#" onclick="showHistory()">申请记录</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -140,9 +141,6 @@
                     <!-- 表格将显示在这个容器中 -->
                 </div>
 
-                <!-- 病历模板选择 -->
-                <!-- <div class="doc-records-format">
-                    </div> -->
             </div>
             <!-- End records -->
 
@@ -169,7 +167,17 @@
                 </div>
             </div>
             <!-- End checkups -->
+
+            <!-- Start history -->
+            <div class="func-option doc-history" id="doc-history" style="display: none;">
+                <div id="vocateTableContainer">
+                    <!-- 表格将显示在这个容器中 -->
+                </div>
+            </div>
+            <!-- End history -->
+
         </div>
+
 
 
     </section>
@@ -406,13 +414,6 @@
 
     <!-- 近期出诊 -->
     <script>
-        // 在页面加载时执行
-        window.onload = function () {
-
-            // 找到 ID 为 "doctor-id" 的元素，并将其内容设置为 doctorId
-            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');
-        };
-
         $(document).ready(function () {
             // 获取医生ID，假设已经存储在sessionStorage中
             const doctorId = sessionStorage.getItem('doctorId');
@@ -420,7 +421,7 @@
             // 使用AJAX请求从后端获取数据
             $.ajax({
                 url: '/getDoctorAppointments',
-                method: 'POST',
+                method: 'GET',
                 data: { doctorId: doctorId },
                 success: function (response) {
                     // 如果成功获取到数据
@@ -470,9 +471,9 @@
                 }
             });
         });
-
+        
         let ascendingOrder = true;
-
+        
         function sortTable(columnIndex) {
 
             // 获取包含 table 的特定 div 元素
@@ -566,7 +567,7 @@
 
                     if (data.status == "ok") {
                         alert("提交成功")
-                    } 
+                    }
                     else {
                         alert("异常")
                     }
@@ -577,6 +578,101 @@
                 }
             });
         }
+
+
+
+    </script>
+
+    <!-- 审批记录 -->
+    <script>
+$(document).ready(function () {
+    // 获取医生ID，假设已经存储在sessionStorage中
+    const doctorId = sessionStorage.getItem('doctorId');
+
+    // 使用AJAX请求从后端获取数据
+    $.ajax({
+        url: '/getVacateByDoctorId',
+        method: 'GET',
+        data: { doctorId: doctorId },
+        success: function (response) {
+            // 如果成功获取到数据
+            if (response && response.length > 0) {
+                // 创建表格并添加表头
+                let table = '<table><thead><tr>' +
+                    '<th>请假单号</th>' +
+                    '<th>医生ID</th>' +
+                    '<th>请假描述</th>' +
+                    '<th>申请时间</th>' +
+                    '<th>请假日期</th>' +
+                    '<th>请假状态</th>' +
+                    '<th>审批人</th>' +
+                    '<th>审批意见</th>' +
+                    '</tr></thead><tbody>';
+
+                // 遍历请假数据并添加到表格中
+                response.forEach(vacate => {
+                    const applyDate = new Date(vacate.applyDate).toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false,
+                        timeZone: 'Asia/Shanghai'
+                    }).replace(/\//g, '-').replace(',', '');
+
+                    const vacateDate = new Date(vacate.vacateDate).toLocaleDateString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\//g, '-');
+
+                    let statusText = '';
+                    switch (vacate.status) {
+                        case 0:
+                            statusText = '未审批';
+                            break;
+                        case -1:
+                            statusText = '未通过';
+                            break;
+                        case 1:
+                            statusText = '已通过';
+                            break;
+                        default:
+                            statusText = '未知状态';
+                    }
+
+                    table += `<tr>
+                        <td>${vacate.vacateId}</td>
+                        <td>${vacate.doctorId}</td>
+                        <td>${vacate.description}</td>
+                        <td>${applyDate}</td>
+                        <td>${vacateDate}</td>
+                        <td>${statusText}</td>
+                        <td>${vacate.adminId || '-'}</td>
+                        <td>${vacate.adminOpinion || '-'}</td>
+                    </tr>`;
+                });
+
+                table += '</tbody></table>';
+
+                // 将表格添加到页面中的指定容器中
+                $('#vocateTableContainer').html(table);
+            } else {
+                // 如果没有获取到数据，显示相应信息或执行其他操作
+                $('#vocateTableContainer').html('<p>没有请假数据</p>');
+            }
+        },
+
+        error: function (error) {
+            // 如果请求出现错误，显示错误信息或执行其他操作
+            $('#vocateTableContainer').html('<p>请求数据时出错</p>');
+            console.error('请求请假数据时出错', error);
+        }
+    });
+});
+
 
 
 
@@ -611,13 +707,37 @@
             $("#doc-prescriptions").css('display', 'none')
             $("#doc-history").css('display', 'none')
         }
+
+        function showHistory() {
+            if ($("#history").hasClass('active')) return;
+
+            $("#history").addClass('active')
+            if ($("#checkups").hasClass('active')) $("#checkups").removeClass('active')
+            if ($("#records").hasClass('active')) $("#records").removeClass('active')
+            if ($("#prescriptions").hasClass('active')) $("#prescriptions").removeClass('active')
+
+            $("#doc-records").css('display', 'none')
+            $("#doc-checkups").css('display', 'none')
+            $("#doc-prescriptions").css('display', 'none')
+            $("#doc-history").css('display', 'block')
+        }
     </script>
 
-    <!-- 退出逻辑 -->
+    <!-- 其它逻辑 -->
     <script>
+        // 在页面加载时执行
+        window.onload = function () {
+
+            // 找到 ID 为 "doctor-id" 的元素，并将其内容设置为 doctorId
+            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');
+        };
         $('.get-quote a').click(function () {
             localStorage.removeItem('doctor_token');
         });
+
+       
+
+
     </script>
 
 </body>

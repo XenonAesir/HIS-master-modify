@@ -2,12 +2,10 @@ package com.xenon.hrs.service.impl;
 
 
 import com.xenon.hrs.DTO.ReserveInfoDto;
-import com.xenon.hrs.DTO.ReserveTableDto;
 import com.xenon.hrs.generate.DoctorDao;
 import com.xenon.hrs.generate.ReserveTableDao;
 import com.xenon.hrs.generate.VacateDao;
 import com.xenon.hrs.models.Doctor;
-import com.xenon.hrs.models.ReserveTable;
 import com.xenon.hrs.models.Vacate;
 import com.xenon.hrs.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +39,11 @@ public class DoctorServiceImpl implements DoctorService
     public int applyVacate(Vacate vacate)
     {
         return vacateDao.insert(vacate);
+    }
+
+    @Override
+    public List<Vacate> getVacate(String doctorId)
+    {
+        return vacateDao.selectByDoctorId(doctorId);
     }
 }

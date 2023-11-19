@@ -14,4 +14,6 @@ public interface DoctorService
     public List<ReserveInfoDto> getThisWeekReserve(String doctorId);
 
     public int applyVacate(Vacate vacate);
+
+    public List<Vacate> getVacate(String doctorId);
 }

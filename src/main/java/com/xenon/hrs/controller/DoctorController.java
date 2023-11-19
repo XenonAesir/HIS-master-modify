@@ -101,4 +101,15 @@ public class DoctorController
 
     }
 
+    @RequestMapping("/getVacateByDoctorId")
+    @ResponseBody
+    public List<Vacate> getVacateByDoctorId(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        String doctorId = request.getParameter("doctorId");
+
+        List<Vacate> vacate = doctorService.getVacate(doctorId);
+        System.out.println(vacate);
+
+        return vacate;
+    }
 }

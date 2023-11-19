@@ -45,5 +45,9 @@ public class Vacate implements Serializable {
     * 审批日期
     */
     private Date adminDate;
+    /**
+     * 审批意见
+     */
+    private String adminOpinion;
 
 }

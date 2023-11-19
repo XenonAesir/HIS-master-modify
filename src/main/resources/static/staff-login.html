@@ -208,7 +208,7 @@
                             console.log("admin_token是" + token)
                         }
 
-                        window.location.href = "pay-main.html";
+                        window.location.href = "admin-main.html";
                     } else if (data.status == "ok2") {
                         document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //医生登录成功
                         sessionStorage.setItem("doctorId", data.data)
@@ -261,7 +261,7 @@
                             document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";  //登录成功
                             sessionStorage.setItem("adminId", data.data)
 
-                            window.location.href = "pay-main.html";
+                            window.location.href = "admin-main.html";
                         } else if (data.status == "fail") {
                             document.getElementById("tishi").innerHTML = "<br><font color='red'>" + data.msg + "</font>";
                         } else if (data.status == "null") {
