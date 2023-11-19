@@ -86,7 +86,7 @@
                             <!-- Single Widget -->
                             <div class="single-widget button">
                                 <div style="float:left; margin-top: 10px; margin-right: 20px">
-                                    工号：<span id="doctor-id"></span>
+                                    工号：<span id="admin-id"></span>
                                 </div>
                                 <div class="get-quote" style="float: right;">
                                     <a href="index2.html" class="btn">退出</a>
@@ -116,10 +116,8 @@
                                 <div class="main-menu" style="float: left;">
                                     <nav class="navigation">
                                         <ul class="nav menu">
-                                            <li class="active" id="records"><a href="#" onclick="showRecords()">近期出诊</a>
+                                            <li class="active" id="history"><a href="#" onclick="showHistory()">短假审批</a>
                                             </li>
-                                            <li id="checkups"><a href="#" onclick="showCheckups()">临时短假</a></li>
-                                            <li id="history"><a href="#" onclick="showHistory()">申请记录</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -133,43 +131,9 @@
         <!-- End function: records, checkups, prescriptions -->
 
         <div class="container">
-            <!-- Start records -->
-            <div class="func-option doc-records" id="doc-records" style="display: block;">
-
-
-                <div id="appointmentTableContainer">
-                    <!-- 表格将显示在这个容器中 -->
-                </div>
-
-            </div>
-            <!-- End records -->
-
-            <!-- Start checkups -->
-            <div class="func-option doc-checkups" id="doc-checkups" style="display: none;">
-                <div style=" padding-left: 12px" class="col-12">
-                    <p class="doc-checkups-result">
-                    <h6 class="doc-records-item">请假缘由</h6>
-                    <textarea class="doc-records-input" id="check_des"></textarea>
-                    </p>
-
-                    <p class="doc-checkups-type">
-                    <h6 class="doc-records-item doc-checkups-item">日期选择</h6>
-
-                    <input type="text" class="doc-records-date-input" id="dateInput">
-
-                    </p>
-
-                    <div class="doc-records-btngroup">
-                        <button class="btn" onclick="confirming()" style="float: right;">提交</button>
-
-                    </div>
-
-                </div>
-            </div>
-            <!-- End checkups -->
 
             <!-- Start history -->
-            <div class="func-option doc-history" id="doc-history" style="display: none;">
+            <div class="func-option doc-history" id="doc-history" style="display: block;">
                 <div id="vocateTableContainer">
                     <!-- 表格将显示在这个容器中 -->
                 </div>
@@ -412,266 +376,96 @@
     </style>
 
 
-    <!-- 近期出诊 -->
-    <script>
-        $(document).ready(function () {
-            // 获取医生ID，假设已经存储在sessionStorage中
-            const doctorId = sessionStorage.getItem('doctorId');
-
-            // 使用AJAX请求从后端获取数据
-            $.ajax({
-                url: '/getDoctorAppointments',
-                method: 'GET',
-                data: { doctorId: doctorId },
-                success: function (response) {
-                    // 如果成功获取到数据
-                    if (response && response.length > 0) {
-                        // 创建表格并添加表头
-                        let table = '<table class="sortable-table"><thead><tr>' +
-                            '<th data-index="0">预约单号</th>' +
-                            '<th data-index="1">预约时间</th>' +
-                            '<th data-index="2">患者姓名</th>' +
-                            '<th data-index="3">患者性别</th>' +
-                            '<th data-index="4">患者电话</th>' +
-                            '</tr></thead><tbody>';
-
-                        // 遍历预约数据并添加到表格中
-                        response.forEach(ReserveInfoDto => {
-                            const genderText = ReserveInfoDto.patientGender === 1 ? '男' : '女';
-                            table += `<tr><td>${ReserveInfoDto.reserveId}</td><td>${ReserveInfoDto.reserveTime}</td><td>${ReserveInfoDto.patientName}</td><td>${genderText}</td><td>${ReserveInfoDto.patientTel}</td></tr>`;
-                        });
-
-                        table += '</tbody></table>';
-
-                        // 将表格添加到页面中的指定容器中
-                        $('#appointmentTableContainer').html(table);
-
-                        // 给新表格添加sortable-table类以便识别
-                        $('.sortable-table th').click(function () {
-                            const index = $(this).data('index');
-                            sortTable(index, $(this).closest('.sortable-table')[0]);
-                        });
-
-                        // 给表头th绑定鼠标悬停事件
-                        $('.sortable-table th').hover(function () {
-                            $(this).addClass('pointer');
-                        }, function () {
-                            $(this).removeClass('pointer');
-                        });
-                    } else {
-                        // 如果没有获取到数据，显示相应信息或执行其他操作
-                        $('#appointmentTableContainer').html('<p>没有预约数据</p>');
-                    }
-                },
-
-                error: function (error) {
-                    // 如果请求出现错误，显示错误信息或执行其他操作
-                    $('#appointmentTableContainer').html('<p>请求数据时出错</p>');
-                    console.error('请求预约数据时出错', error);
-                }
-            });
-        });
-
-        let ascendingOrder = true;
-
-        function sortTable(columnIndex) {
-
-            // 获取包含 table 的特定 div 元素
-            const tableContainer = document.getElementById('appointmentTableContainer');
-
-            // 在该 div 元素内查找 table
-            const table = tableContainer.querySelector('table');
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-            rows.sort((a, b) => {
-                let cellA = a.querySelectorAll('td')[columnIndex].textContent.trim();
-                let cellB = b.querySelectorAll('td')[columnIndex].textContent.trim();
-
-                // Convert cell content to appropriate types for sorting
-                cellA = isNaN(cellA) ? cellA.toUpperCase() : parseFloat(cellA);
-                cellB = isNaN(cellB) ? cellB.toUpperCase() : parseFloat(cellB);
-
-                if (cellA < cellB) return ascendingOrder ? -1 : 1;
-                if (cellA > cellB) return ascendingOrder ? 1 : -1;
-                return 0;
-            });
-
-            // Reverse order for next click
-            ascendingOrder = !ascendingOrder;
-
-            // Rearrange rows based on sorting
-            rows.forEach(row => table.querySelector('tbody').appendChild(row));
-        }
-
-    </script>
-
-    <!-- 临时短假 -->
-    <script>
-        var nowTemp = new Date();
-        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-
-        var checkin = $('#dateInput').datepicker({
-            onRender: function (date) {
-                var sevenDaysLater = new Date(); // 获取7天后的日期
-                sevenDaysLater.setDate(now.getDate() + 6);
-
-                return date.valueOf() < now.valueOf() || date.valueOf() > sevenDaysLater.valueOf() ? 'disabled' : '';
-            },
-            format: 'yyyy/mm/dd',
-            weekStart: 1,
-        }).on('changeDate', function (ev) {
-            if (ev.date.valueOf() > checkout.date.valueOf()) {
-                var newDate = new Date(ev.date)
-                newDate.setDate(newDate.getDate() + 1);
-                checkout.setValue(newDate);
-            }
-            checkin.hide();
-            $('#dpd2')[0].focus();
-        }).data('datepicker');
-
-        function convertDateFormat(inputDate) {
-            const dateParts = inputDate.split('/'); // 将输入日期按照 '/' 分隔
-            const year = dateParts[0];
-            const month = dateParts[1];
-            const day = dateParts[2];
-
-            // 构造新日期的格式为 'yyyy-mm-dd 00:00:00'
-            const formattedDate = year + '-' + month + '-' + day + ' 00:00:00';
-
-            return formattedDate;
-        }
-
-        function confirming() {
-            // 获取输入的请假描述和日期
-            const description = document.getElementById('check_des').value;
-            const date = document.getElementById('dateInput').value;
-
-            // 将日期格式进行转换
-            const formattedDate = convertDateFormat(date);
-
-
-            $.ajax({
-                url: "/insertVacate",
-                type: "POST",
-                data: {
-                    "doctorId": sessionStorage.getItem('doctorId'),
-                    "description": description,
-                    "vacateDate": formattedDate,
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    console.log(data);
-
-
-
-                    if (data.status == "ok") {
-                        alert("提交成功")
-                    }
-                    else {
-                        alert("异常")
-                    }
-
-                },
-                error: function (res) {
-                    alert("请求错误！", console.res)
-                }
-            });
-        }
-
-
-
-    </script>
 
     <!-- 审批记录 -->
     <script>
-        $(document).ready(function () {
-            // 获取医生ID，假设已经存储在sessionStorage中
-            const doctorId = sessionStorage.getItem('doctorId');
+ $(document).ready(function () {
+        const adminId = sessionStorage.getItem('adminId');
 
-            // 使用AJAX请求从后端获取数据
-            $.ajax({
-                url: '/getVacateByDoctorId',
-                method: 'GET',
-                data: { doctorId: doctorId },
-                success: function (response) {
-                    // 如果成功获取到数据
-                    if (response && response.length > 0) {
-                        // 创建表格并添加表头
-                        let table = '<table><thead><tr>' +
-                            '<th>请假单号</th>' +
-                            '<th>医生ID</th>' +
-                            '<th>请假描述</th>' +
-                            '<th>申请时间</th>' +
-                            '<th>请假日期</th>' +
-                            '<th>请假状态</th>' +
-                            '<th>审批人</th>' +
-                            '<th>审批意见</th>' +
-                            '</tr></thead><tbody>';
+        $.ajax({
+            url: '/getVacateByAdminId',
+            method: 'GET',
+            data: { adminId: adminId },
+            success: function (response) {
+                if (response && response.length > 0) {
+                    let table = '<table><thead><tr>' +
+                        '<th>请假单号</th>' +
+                        '<th>医生ID</th>' +
+                        '<th>请假描述</th>' +
+                        '<th>申请时间</th>' +
+                        '<th>请假日期</th>' +
+                        '<th>审批</th>' +
+                        '</tr></thead><tbody>';
 
-                        // 遍历请假数据并添加到表格中
-                        response.forEach(vacate => {
-                            const applyDate = new Date(vacate.applyDate).toLocaleString('zh-CN', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit',
-                                hour12: false,
-                                timeZone: 'Asia/Shanghai'
-                            }).replace(/\//g, '-').replace(',', '');
+                    response.forEach(vacate => {
+                        const applyDate = new Date(vacate.applyDate).toLocaleString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false,
+                            timeZone: 'Asia/Shanghai'
+                        }).replace(/\//g, '-').replace(',', '');
 
-                            const vacateDate = new Date(vacate.vacateDate).toLocaleDateString('zh-CN', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit'
-                            }).replace(/\//g, '-');
+                        const vacateDate = new Date(vacate.vacateDate).toLocaleDateString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }).replace(/\//g, '-');
 
-                            let statusText = '';
-                            switch (vacate.status) {
-                                case 0:
-                                    statusText = '未审批';
-                                    break;
-                                case -1:
-                                    statusText = '未通过';
-                                    break;
-                                case 1:
-                                    statusText = '已通过';
-                                    break;
-                                default:
-                                    statusText = '未知状态';
+                        table += `<tr>
+                            <td>${vacate.vacateId}</td>
+                            <td>${vacate.adminId}</td>
+                            <td>${vacate.description}</td>
+                            <td>${applyDate}</td>
+                            <td>${vacateDate}</td>
+                            <td>
+                                <button class="approvalBtn btn" data-vacateid="${vacate.vacateId}">审批</button>
+                            </td>
+                        </tr>`;
+                    });
+
+                    table += '</tbody></table>';
+                    $('#vocateTableContainer').html(table);
+
+                    $('.approvalBtn').click(function () {
+                        const vacateId = $(this).data('vacateid');
+                        if (!vacateId) {
+                            alert('无法获取请假单号');
+                            return;
+                        }
+                        const approval = prompt('审批是否通过？（-1不通过，1通过）');
+                        const opinion = prompt('请输入审批意见：');
+
+                        $.ajax({
+                            url: '/submitApproval',
+                            method: 'POST',
+                            data: {
+                                vacateId: vacateId,
+                                approval: approval,
+                                opinion: opinion
+                            },
+                            success: function () {
+                                alert("审批完成")
+                                location.reload();
+                            },
+                            error: function (error) {
+                                console.error('提交审批时出错', error);
                             }
-
-                            table += `<tr>
-                        <td>${vacate.vacateId}</td>
-                        <td>${vacate.doctorId}</td>
-                        <td>${vacate.description}</td>
-                        <td>${applyDate}</td>
-                        <td>${vacateDate}</td>
-                        <td>${statusText}</td>
-                        <td>${vacate.adminId || '-'}</td>
-                        <td>${vacate.adminOpinion || '-'}</td>
-                    </tr>`;
                         });
-
-                        table += '</tbody></table>';
-
-                        // 将表格添加到页面中的指定容器中
-                        $('#vocateTableContainer').html(table);
-                    } else {
-                        // 如果没有获取到数据，显示相应信息或执行其他操作
-                        $('#vocateTableContainer').html('<p>没有请假数据</p>');
-                    }
-                },
-
-                error: function (error) {
-                    // 如果请求出现错误，显示错误信息或执行其他操作
-                    $('#vocateTableContainer').html('<p>请求数据时出错</p>');
-                    console.error('请求请假数据时出错', error);
+                    });
+                } else {
+                    $('#vocateTableContainer').html('<p>没有未处理的请假数据</p>');
                 }
-            });
+            },
+            error: function (error) {
+                $('#vocateTableContainer').html('<p>请求数据时出错</p>');
+                console.error('请求请假数据时出错', error);
+            }
         });
+    });
 
 
 
@@ -728,15 +522,12 @@
         // 在页面加载时执行
         window.onload = function () {
 
-            // 找到 ID 为 "doctor-id" 的元素，并将其内容设置为 doctorId
-            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');
+            // 找到 ID 为 "admin-id" 的元素，并将其内容设置为 adminId
+            document.getElementById('admin-id').innerText = sessionStorage.getItem('adminId');
         };
         $('.get-quote a').click(function () {
-            localStorage.removeItem('doctor_token');
+            localStorage.removeItem('admin_token');
         });
-
-
-
 
     </script>
 

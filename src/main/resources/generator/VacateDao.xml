@@ -25,16 +25,19 @@
     </insert>
     <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Vacate">
         UPDATE vacates
-        SET doctor_id   = #{doctorId, jdbcType=VARCHAR},
-            description = #{description, jdbcType=VARCHAR},
-            apply_date  = #{applyDate, jdbcType=TIMESTAMP},
-            vacate_date = #{vacateDate, jdbcType=TIMESTAMP},
-            status      = #{status, jdbcType=INTEGER},
-            admin_id    = #{adminId, jdbcType=VARCHAR},
-            admin_date  = #{adminDate, jdbcType=TIMESTAMP},
-            admin_opinion = #{adminOpinion,jdbcType=VARCHAR}
+        <set>
+            <if test="doctorId != null">doctor_id = #{doctorId, jdbcType=VARCHAR},</if>
+            <if test="description != null">description = #{description, jdbcType=VARCHAR},</if>
+            <if test="applyDate != null">apply_date = #{applyDate, jdbcType=TIMESTAMP},</if>
+            <if test="vacateDate != null">vacate_date = #{vacateDate, jdbcType=TIMESTAMP},</if>
+            <if test="status != null">status = #{status, jdbcType=INTEGER},</if>
+            <if test="adminId != null">admin_id = #{adminId, jdbcType=VARCHAR},</if>
+            <if test="adminDate != null">admin_date = #{adminDate, jdbcType=TIMESTAMP},</if>
+            <if test="adminOpinion != null">admin_opinion = #{adminOpinion, jdbcType=VARCHAR},</if>
+        </set>
         WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
     </update>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         DELETE
         FROM vacates
@@ -49,5 +52,11 @@
         SELECT <include refid="Base_Column_List"/>
         FROM vacates
         WHERE doctor_id = #{doctorId, jdbcType=VARCHAR}
+    </select>
+    <select id="selectByAdminId" resultType="com.xenon.hrs.models.Vacate" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM vacates
+        WHERE admin_id = #{adminId, jdbcType=VARCHAR}
+            AND status = 0
     </select>
 </mapper>

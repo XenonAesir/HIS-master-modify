@@ -16,5 +16,7 @@ public interface VacateDao
 
     List<Vacate> selectByDoctorId(String doctorId);
 
+    List<Vacate> selectByAdminId(String adminId);
+
     int updateByPrimaryKey(Vacate vacate);
 }
