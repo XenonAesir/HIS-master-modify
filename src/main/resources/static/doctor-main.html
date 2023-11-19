@@ -162,7 +162,7 @@
                     </p>
 
                     <div class="doc-records-btngroup">
-                        <button class="btn" onclick="submitCheckup()" style="float: right;">提交</button>
+                        <button class="btn" onclick="confirming()" style="float: right;">提交</button>
 
                     </div>
 
@@ -410,7 +410,7 @@
         window.onload = function () {
 
             // 找到 ID 为 "doctor-id" 的元素，并将其内容设置为 doctorId
-            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');;
+            document.getElementById('doctor-id').innerText = sessionStorage.getItem('doctorId');
         };
 
         $(document).ready(function () {
@@ -527,6 +527,59 @@
             checkin.hide();
             $('#dpd2')[0].focus();
         }).data('datepicker');
+
+        function convertDateFormat(inputDate) {
+            const dateParts = inputDate.split('/'); // 将输入日期按照 '/' 分隔
+            const year = dateParts[0];
+            const month = dateParts[1];
+            const day = dateParts[2];
+
+            // 构造新日期的格式为 'yyyy-mm-dd 00:00:00'
+            const formattedDate = year + '-' + month + '-' + day + ' 00:00:00';
+
+            return formattedDate;
+        }
+
+        function confirming() {
+            // 获取输入的请假描述和日期
+            const description = document.getElementById('check_des').value;
+            const date = document.getElementById('dateInput').value;
+
+            // 将日期格式进行转换
+            const formattedDate = convertDateFormat(date);
+
+
+            $.ajax({
+                url: "/insertVacate",
+                type: "POST",
+                data: {
+                    "doctorId": sessionStorage.getItem('doctorId'),
+                    "description": description,
+                    "vacateDate": formattedDate,
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    console.log(data);
+
+
+
+                    if (data.status == "ok") {
+                        alert("提交成功")
+                    } 
+                    else {
+                        alert("异常")
+                    }
+
+                },
+                error: function (res) {
+                    alert("请求错误！", console.res)
+                }
+            });
+        }
+
+
+
     </script>
 
     <!-- 页面切换 -->
@@ -560,319 +613,11 @@
         }
     </script>
 
+    <!-- 退出逻辑 -->
     <script>
         $('.get-quote a').click(function () {
             localStorage.removeItem('doctor_token');
         });
-
-
-        $(document).ready(function () {
-            recordId = $('#patient-infoo').data('id')
-            $('#meds-drawer').css('display', 'none')
-            $('#searched-meds-name').html('')
-            $('#searched-meds-number').html('')
-
-            medsList = []
-            registerId = ''
-            // 获取这个病人的信息
-            $.ajax({
-                type: 'get',
-                url: '/doctor-main/',
-                dataType: 'json',
-                cache: false,
-                async: false,
-                success: function (data) {
-                    $('#doctor-id').text(sessionStorage.getItem('doctorId'))
-                    registerId = data.register_id
-                    var gender = ""
-                    if (data.patientGender == 0) {
-                        gender = "女"
-                    }
-                    else gender = "男"
-                    $('#patient-name').text("姓名：" + data.patientName)
-                    $('#patient-name').data('id', data.patientId)
-                    $('#patient-age').text("年龄：" + calAge(data.patientId))
-                    $('#patient-gender').text("性别：" + gender)
-                    $('#register-number').text("就诊号：" + data.registerNumber)
-                },
-            })
-        })
-
-        function calAge(id) {
-            // 默认是中国人
-            var dob = id.substring(6, 14)
-            var year = dob.substring(0, 4) * 1
-            var month = dob.substring(4, 6) * 1
-            var day = dob.substring(6) * 1
-
-            var date = new Date()
-            var thisYear = date.getFullYear()
-            var thisMonth = date.getMonth() + 1
-            var thisDay = date.getDate()
-
-            var age = thisYear - year
-            if (thisMonth < month) {
-                age -= 1
-            } else if (thisMonth == month && thisDay < day) {
-                age -= 1
-            }
-
-            return age;
-        }
-
-        function submitRecord() {
-            var symptomDescription = '症状描述：' + $('#record-symptom').val() + '\n'
-            '诊断结果：' + $('#record-result').val()
-
-            var data_ = {}
-            data_['symtomDescription'] = symptomDescription
-            data_['patientId'] = $('#patient-name').data('id')
-
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                // contentType: 'application/json',
-                url: '/doctor-main/record',
-                data: data_,
-                success: function (data) {
-                    if (data.recordStatus == 'ok') {
-                        alert('暂存成功！')
-                        recordId = data.recordId
-                        $('#patient-infoo').data('id', recordId)
-                    } else {
-                        alert('暂存失败！')
-                    }
-                },
-
-            })
-
-        }
-
-        function submitCheckup() {
-            var checkDescription = $('#checkup-item').val()
-            // console.log(checkDescription)
-            var data_ = {}
-            data_['checkDescription'] = checkDescription
-            data_['patientId'] = $('#patient-name').data('id')
-            data_['recordId'] = recordId
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                // contentType: 'application/json',
-                data: data_,
-                url: '/doctor-main/check',
-                success: function (data) {
-                    console.log(data)
-                    alert('暂存成功！')
-                }
-            });
-
-        }
-
-        function searchMed() {
-            var medName = $('#meds-name').val()
-            $.ajax({
-                type: 'get',
-                url: '/doctor-main/medicineSearch?medicineName=' + medName,
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    console.log(data)
-                    if (data.status == 'ok') {
-                        $('#meds-drawer').css('display', 'block')
-                        $('#meds-drawer').data('id', data.medicineId)
-                        $('#searched-meds-name').text(data.medicineName)
-                        $('#searched-meds-number').text(data.medicineNumber)
-                    } else {
-                        alert(data.msg)
-                    }
-                }
-            })
-        }
-
-        $('#meds-drawer').click(function () {
-            var medId = $(this).data('id')
-            console.log(medId)
-            var medName = $('#searched-meds-name').text()
-            addMed(medId, medName)
-            $(this).css('display', 'none')
-            $('#meds-name').val('')
-        })
-
-        function addMed(medicineId, medicineName) {
-            $('#meds-list').append(
-                '<tr>' +
-                '<td>' + medicineId + '</td>' +
-                '<td>' + medicineName + '</td>' +
-                '<td class="doc-table-editable" contenteditable="">1</td>' +
-                '<td><button class="btn doc-table-btn" onclick="deleteMed(this)">删除</button></td>' +
-                '</tr>'
-            )
-            medsList.push(medicineId)
-        }
-
-        function deleteMed(e) {
-            var medId = $(e).parent().parent().children()[0]
-            var i = medsList.indexOf(medId)
-            medsList.splice(i, 1)
-            $(e).parent().parent().remove()
-        }
-
-        function submitPrescription() {
-            var data_ = {}
-            data_['recordId'] = recordId
-            data_['patientId'] = $('#patient-name').data('id')
-            data_['medicineId'] = ''
-            data_['medicineNumber'] = ''
-
-            var tds = $('#meds-list').children().children()
-            console.log(tds)
-            for (let i = 0; i < tds.length; i += 4) {
-                data_['medicineId'] += ',' + tds[i].innerHTML
-                data_['medicineNumber'] += ',' + tds[i + 2].innerHTML
-
-                // console.log(data_['medicineId'])
-                // console.log(data_['medicineNumber'])
-            }
-            // console.log(data_)
-            data_['medicineId'] = data_['medicineId'].substring(1)
-            data_['medicineNumber'] = data_['medicineNumber'].substring(1)
-
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                // contentType: 'application/json',
-                url: '/doctor-main/prescriptionCreate',
-                data: data_,
-                success: function (data) {
-                    //
-                    alert('暂存成功！')
-                }
-            })
-
-        }
-
-        function getHistory() {
-            departmentId2Name = {
-                'DE000001': '内科',
-                'DE000002': '外科',
-                'DE000003': '儿科',
-                'DE000004': '五官科',
-                'DE000005': '皮肤科',
-                'DE000006': '康复科',
-            }
-            $('#history-list').html('')
-            var patientId = $('#patient-name').data('id')
-            // console.log(patientId)
-            $.ajax({
-                type: 'get',
-                cache: 'false',
-                url: '/doctor-main/historyRecord?patientId=' + patientId,
-                async: 'false',
-                dataType: 'json',
-                success: function (data) {
-                    for (let i = 0; i < data.length; i++) {
-                        var d = new Date(data[i].billTime);
-                        var year = d.getFullYear()
-                        var month = d.getMonth() + 1
-                        var day = d.getDate()
-                        var date = year + '-' + month + '-' + day
-                        var time = d.getHours()
-                        if (time < 10) {
-                            time = '0' + time
-                        }
-                        time = date + ' ' + time + ":" + d.getMinutes() + ":" + d.getSeconds()
-                        $('#history-list').append(
-                            '<tr>' +
-                            '<td>' + data[i].recordId + '</td>' +
-                            '<td>' + time + '</td>' +
-                            '<td>' + departmentId2Name[data[i].departmentId] + '-' + data[i].doctorName + '</td>' +
-                            '<td><button class="btn doc-table-btn" onclick="getDetail(this)">查看</button></td>' +
-                            '</tr>'
-                        )
-                    }
-                }
-            })
-        }
-
-        function getDetail(e) {
-            console.log('????')
-            $('.history-empty').css('display', 'none')
-            $('.history-detail-text').css('display', 'block')
-            // $('.history-detail-text').val('test')
-
-            var recordId = $(e).parent().parent().children()[0].innerText
-            $.ajax({
-                type: 'get',
-                cache: 'false',
-                url: '/doctor-main/detailedRecord?recordId=' + recordId,
-                dataType: 'json',
-                async: 'false',
-                success: function (data) {
-                    var symptonDescription = data.symptomDescription
-                    var medicineName = data.medicineNames
-                    var medicineNumber = data.medicineNumbers
-                    var checkDescription = data.checkDescriptions
-
-                    var medHistory = '\n给药：\n'
-                    if (medicineName != '') {
-                        medicineName = medicineName.split(',')
-                        medicineNumber = medicineNumber.split(',')
-                        for (let i = 0; i < medicineName.length - 1; i++) {
-                            var tmp = medicineName[i] + '       用量：' + medicineNumber[i] + '\n'
-                            medHistory += tmp
-                        }
-                    } else {
-                        medHistory += '无给药信息' + '\n'
-                    }
-                    var checkupHistory = '\n检查检验：\n'
-                    if (checkDescription != '') {
-                        checkDescription = checkDescription.split(',')
-                        for (let i = 0; i < checkDescription.length - 1; i++) {
-                            checkupHistory += checkDescription + '结果：无明显异常\n'
-                        }
-                    } else {
-                        checkupHistory += '无检查检验信息' + '\n'
-                    }
-
-                    var history = symptonDescription + medHistory + checkupHistory
-                    console.log(history)
-                    $('.history-detail-text').val(history)
-                }
-            })
-        }
-
-        function nextPatient() {
-
-            $.ajax({
-                type: 'get',
-                url: '/doctor-main/next',
-                data: { "registerId": registerId },
-                dataType: 'json',
-                success: function (data) {
-                    alert('诊毕！')
-
-                    registerId = data.register_id
-                    var gender = ""
-                    if (data.patientGender == 0) {
-                        gender = "女"
-                    }
-                    else gender = "男"
-                    $('#patient-name').text("姓名：" + data.patientName)
-                    $('#patient-name').data('id', data.patientId)
-                    $('#patient-age').text("年龄：" + calAge(data.patientId))
-                    $('#patient-gender').text("性别：" + gender)
-                    $('#register-number').text("就诊号：" + data.registerNumber)
-
-                    // $('#patient-name').text(data.patientName)
-                    // $('#patient-name').data('id', data.patientId)
-                    // $('#patient-age').text(calAge(data.patientId))
-                    // $('#patient-gender').text(data.patientGender)
-                    // $('#register-number').text(data.registerNumber)
-                    location.reload()
-                },
-            })
-        }
     </script>
 
 </body>

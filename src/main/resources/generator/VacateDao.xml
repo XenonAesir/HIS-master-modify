@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xenon.hrs.generate.VacateDao">
+    <insert id="insert" keyColumn="vacate_id" keyProperty="vacateId" parameterType="com.xenon.hrs.models.Vacate" useGeneratedKeys="true">
+        INSERT INTO vacates (doctor_id, description, apply_date, vacate_date, status, admin_id, admin_date)
+        VALUES (#{doctorId, jdbcType=VARCHAR}, #{description, jdbcType=VARCHAR}, #{applyDate, jdbcType=TIMESTAMP},
+                #{vacateDate, jdbcType=TIMESTAMP}, #{status, jdbcType=INTEGER}, #{adminId, jdbcType=VARCHAR}, #{adminDate, jdbcType=TIMESTAMP})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.xenon.hrs.models.Vacate">
+        UPDATE vacates
+        SET doctor_id = #{doctorId, jdbcType=VARCHAR}, description = #{description, jdbcType=VARCHAR},
+            apply_date = #{applyDate, jdbcType=TIMESTAMP}, vacate_date = #{vacateDate, jdbcType=TIMESTAMP},
+            status = #{status, jdbcType=INTEGER}, admin_id = #{adminId, jdbcType=VARCHAR}, admin_date = #{adminDate, jdbcType=TIMESTAMP}
+        WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM vacates
+        WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
+    </delete>
+    <select id="selectByPrimaryKey" resultType="com.xenon.hrs.models.Vacate" parameterType="java.lang.Integer">
+        SELECT *
+        FROM vacates
+        WHERE vacate_id = #{vacateId, jdbcType=INTEGER}
+    </select>
+</mapper>
