@@ -103,7 +103,7 @@
     </header>
 
     <!-- Start portfolio -->
-    <section class="portfolio section" style="padding-top: 20px; height: 60%; width: 100%; ">
+    <section class="portfolio section" style="padding-top: 20px; height: 100%; width: 100%; ">
 
         <!-- Start function: records, checkups, prescriptions -->
         <header class="header style2">
@@ -118,7 +118,7 @@
                                         <ul class="nav menu">
                                             <li class="active" id="records"><a href="#" onclick="showRecords()">近期出诊</a>
                                             </li>
-                                            <li id="checkups"><a href="#" onclick="showCheckups()">停诊申请</a></li>
+                                            <li id="checkups"><a href="#" onclick="showCheckups()">临时短假</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -148,21 +148,22 @@
 
             <!-- Start checkups -->
             <div class="func-option doc-checkups" id="doc-checkups" style="display: none;">
-                <div style=" padding-left: 20px; float: left;">
+                <div style=" padding-left: 12px" class="col-12">
                     <p class="doc-checkups-result">
-                    <h6 class="doc-records-item">请假缘由</h6><textarea class="doc-records-input" id="check_des"></textarea>
+                    <h6 class="doc-records-item">请假缘由</h6>
+                    <textarea class="doc-records-input" id="check_des"></textarea>
                     </p>
 
                     <p class="doc-checkups-type">
                     <h6 class="doc-records-item doc-checkups-item">日期选择</h6>
 
-                    <input type="text" class="form-control" id="dateInput">
+                    <input type="text" class="doc-records-date-input" id="dateInput">
 
                     </p>
 
-                    <div class="doc-records-btngroup" style="margin-top: 100px;"><button class="btn"
-                            onclick="submitCheckup()">暂存</button>
-                        <button class="btn" style="margin-left: 50px;">打印</button>
+                    <div class="doc-records-btngroup">
+                        <button class="btn" onclick="submitCheckup()" style="float: right;">提交</button>
+
                     </div>
 
                 </div>
@@ -189,7 +190,6 @@
     <script src="js/popper.min.js"></script>
     <!-- Bootstrap Datepicker JS -->
     <script src="js/bootstrap-datepicker.js"></script>
-    <script src="locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <!-- Jquery Nav JS -->
     <script src="js/jquery.nav.js"></script>
     <!-- Slicknav JS -->
@@ -299,6 +299,15 @@
             resize: none;
         }
 
+        .doc-records-date-input {
+            margin-left: 30px;
+            width: 100px;
+            height: 20px;
+            resize: none;
+        }
+
+
+
         .doc-checkups-input {
             position: absolute;
             margin-left: 95px;
@@ -308,7 +317,6 @@
 
         .doc-records-item {
             float: left;
-            padding-top: 10px;
         }
 
         .doc-records-btngroup {
@@ -396,7 +404,7 @@
     </style>
 
 
-
+    <!-- 近期出诊 -->
     <script>
         // 在页面加载时执行
         window.onload = function () {
@@ -418,7 +426,7 @@
                     // 如果成功获取到数据
                     if (response && response.length > 0) {
                         // 创建表格并添加表头
-                        let table = '<table><thead><tr>' +
+                        let table = '<table class="sortable-table"><thead><tr>' +
                             '<th data-index="0">预约单号</th>' +
                             '<th data-index="1">预约时间</th>' +
                             '<th data-index="2">患者姓名</th>' +
@@ -437,14 +445,14 @@
                         // 将表格添加到页面中的指定容器中
                         $('#appointmentTableContainer').html(table);
 
-                        // 给表头th绑定点击事件
-                        $('th').click(function () {
+                        // 给新表格添加sortable-table类以便识别
+                        $('.sortable-table th').click(function () {
                             const index = $(this).data('index');
-                            sortTable(index);
+                            sortTable(index, $(this).closest('.sortable-table')[0]);
                         });
 
                         // 给表头th绑定鼠标悬停事件
-                        $('th').hover(function () {
+                        $('.sortable-table th').hover(function () {
                             $(this).addClass('pointer');
                         }, function () {
                             $(this).removeClass('pointer');
@@ -454,6 +462,7 @@
                         $('#appointmentTableContainer').html('<p>没有预约数据</p>');
                     }
                 },
+
                 error: function (error) {
                     // 如果请求出现错误，显示错误信息或执行其他操作
                     $('#appointmentTableContainer').html('<p>请求数据时出错</p>');
@@ -465,7 +474,12 @@
         let ascendingOrder = true;
 
         function sortTable(columnIndex) {
-            const table = document.querySelector('table');
+
+            // 获取包含 table 的特定 div 元素
+            const tableContainer = document.getElementById('appointmentTableContainer');
+
+            // 在该 div 元素内查找 table
+            const table = tableContainer.querySelector('table');
             const rows = Array.from(table.querySelectorAll('tbody tr'));
 
             rows.sort((a, b) => {
@@ -490,12 +504,32 @@
 
     </script>
 
+    <!-- 临时短假 -->
     <script>
-        $('#dateInput').datepicker({
-            language: "zh-CN"
-        });
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dateInput').datepicker({
+            onRender: function (date) {
+                var sevenDaysLater = new Date(); // 获取7天后的日期
+                sevenDaysLater.setDate(now.getDate() + 7);
+
+                return date.valueOf() < now.valueOf() || date.valueOf() > sevenDaysLater.valueOf() ? 'disabled' : '';
+            },
+            format: 'yyyy/mm/dd',
+            weekStart: 1,
+        }).on('changeDate', function (ev) {
+            if (ev.date.valueOf() > checkout.date.valueOf()) {
+                var newDate = new Date(ev.date)
+                newDate.setDate(newDate.getDate() + 1);
+                checkout.setValue(newDate);
+            }
+            checkin.hide();
+            $('#dpd2')[0].focus();
+        }).data('datepicker');
     </script>
 
+    <!-- 页面切换 -->
     <script>
         function showRecords() {
             if ($("records").hasClass('active')) return;
