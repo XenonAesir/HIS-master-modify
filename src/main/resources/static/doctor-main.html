@@ -512,7 +512,7 @@
         var checkin = $('#dateInput').datepicker({
             onRender: function (date) {
                 var sevenDaysLater = new Date(); // 获取7天后的日期
-                sevenDaysLater.setDate(now.getDate() + 7);
+                sevenDaysLater.setDate(now.getDate() + 6);
 
                 return date.valueOf() < now.valueOf() || date.valueOf() > sevenDaysLater.valueOf() ? 'disabled' : '';
             },
