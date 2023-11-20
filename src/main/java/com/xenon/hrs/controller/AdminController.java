@@ -54,12 +54,19 @@ public class AdminController
         Date currentDate = new Date();
         vacate.setAdminDate(currentDate);
 
-        int i = adminService.updateVacate(vacate);
-        System.out.println(i);
+        if (adminService.updateVacate(vacate) == 1)
+        {
+            parameter.put("status", "ok");
+            parameter.put("msg", "您已完成审批");
+            return JSON.toJSONString(parameter);
+        }
+        else
+        {
+            parameter.put("status", "fail");
+            parameter.put("msg", "异常");
+            return JSON.toJSONString(parameter);
+        }
 
-        parameter.put("status", "ok");
-        parameter.put("msg", "您已完成审批");
-        return JSON.toJSONString(parameter);
 
     }
 }

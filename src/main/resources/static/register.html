@@ -212,10 +212,11 @@
 												onclick="registering()">注册</button>
 										</div>
 										<div class="checkbox">
-											<label class="checkbox-inline" for="2">
+											<label class="checkbox-inline" for="agreeCheckbox">
 												<input name="news" type="checkbox" id="agreeCheckbox">是的，我同意所有
 											</label>
 										</div>
+
 										<a href="#" class="terms">条款和条件</a>
 									</div>
 								</div>
@@ -304,6 +305,21 @@
 				alert("请先填写所有信息!");
 				return; // 阻止表单提交
 			}
+
+			// 校验身份证号格式
+			var idRegex = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2]\d|3[0-1])\d{3}[\dX]$/;
+			if (!idRegex.test(patientIdentity)) {
+				alert("请输入正确的身份证号！");
+				return; // 阻止表单提交
+			}
+
+			// 校验手机号格式
+			var telRegex = /^1[3456789]\d{9}$/;
+			if (!telRegex.test(patientTel)) {
+				alert("请输入正确的手机号！");
+				return; // 阻止表单提交
+			}
+
 			var agreeCheckbox = document.getElementById("agreeCheckbox").checked;
 			if (!agreeCheckbox) { // 如果协议未勾选，弹出提示
 				alert("请先同意条款和条件!");

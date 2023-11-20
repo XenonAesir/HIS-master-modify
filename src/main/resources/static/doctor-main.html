@@ -549,6 +549,12 @@
             // 将日期格式进行转换
             const formattedDate = convertDateFormat(date);
 
+            // 检查 description 和 date 是否为空
+            if (description.trim() === '' || date.trim() === '') {
+                alert('请假描述和日期不能为空');
+                return;
+            }
+
 
             $.ajax({
                 url: "/insertVacate",
